@@ -30,12 +30,13 @@ jobs:
         pip install flake8 pytest
         pip install -r requirements.txt
     
-    - name: Generate manual
+    - name: Generate the manual
       run: python make-manual.py
 
     - name: Upload the manual
       uses: actions/upload-artifact@v3.0.0
       with:
+        name: manual
         path: manual.html
         
         
