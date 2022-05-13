@@ -163,7 +163,10 @@ def render(
         classes=classes,
         tiers=sort_tiers(classes.values()),
     )
-    Path('manual.html').write_text(content)
+
+    parent = Path('web/')
+    parent.mkdir(exist_ok=True)
+    (parent / 'manual.html').write_text(content)
 
 
 def main() -> None:
