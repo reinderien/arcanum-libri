@@ -164,7 +164,7 @@ def render(
         tiers=sort_tiers(classes.values()),
     )
 
-    parent = Path('web/')
+    parent = Path('docs/')
     parent.mkdir(exist_ok=True)
     (parent / 'manual.html').write_text(content)
 
