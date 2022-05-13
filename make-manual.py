@@ -166,7 +166,7 @@ def render(
 
     parent = Path('docs/')
     parent.mkdir(exist_ok=True)
-    (parent / 'manual.html').write_text(content)
+    (parent / 'index.html').write_text(content)
 
 
 def main() -> None:
