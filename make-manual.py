@@ -6,13 +6,13 @@ from pathlib import Path
 from pprint import pformat
 from types import NoneType
 from typing import Optional, Union, Iterable, Any
-from urllib.parse import urljoin
+from subprocess import check_output
 
 from jinja2 import Environment, FileSystemLoader
-
 from slimit.parser import Parser
 
 parser = Parser()
+DATA_ROOT = Path('arcanum')
 
 
 @dataclass(frozen=True)
@@ -109,14 +109,21 @@ class Class:
 
 
 def sort_tiers(classes: Iterable[Class]) -> list[str]:
-
     unsorted = {c.tier for c in classes}
     return sorted(unsorted, key=Tier.sort_key)
 
 
+def get_branch() -> str:
+    output = check_output(
+        ('/usr/bin/git', 'branch', '--show-current'),
+        cwd=DATA_ROOT, shell=False, text=True,
+    )
+    return output.rstrip()
+
+
 def load_json(filename: str) -> dict | list:
-    base = Path('arcanum')
-    with (base / filename).with_suffix('.json').open() as f:
+
+    with (DATA_ROOT / filename).with_suffix('.json').open() as f:
         return json.load(f)
 
 
@@ -145,6 +152,7 @@ def render(
     )
     template = env.get_template('template.html')
     content = template.render(
+        branch=get_branch(),
         package=package,
         classes=classes,
         tiers=sort_tiers(classes.values()),
