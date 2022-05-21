@@ -5,11 +5,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Optional, Union, Iterable, Any, Sequence
+from typing import Optional, Union, Iterable, Any
 from urllib.parse import urljoin
 
 from jinja2 import Environment, FileSystemLoader
-from requests import Session
 
 from slimit.parser import Parser
 
@@ -115,37 +114,24 @@ def sort_tiers(classes: Iterable[Class]) -> list[str]:
     return sorted(unsorted, key=Tier.sort_key)
 
 
-def download_or_load(
-    session: Session,
-    cache_dir: Path,
-    filename: str,
-) -> dict | list:
-    file_path = cache_dir / filename
-    inner_dir = file_path.parent
-    inner_dir.mkdir(exist_ok=True, parents=True)
-
-    if file_path.is_file():
-        with file_path.open() as f:
-            doc = json.load(f)
-    else:
-        urlbase = 'https://gitlab.com/mathiashjelm/arcanum/-/raw/master/'
-        url = urljoin(urlbase, filename)
-        with session.get(url) as resp:
-            resp.raise_for_status()
-            file_path.write_bytes(resp.content)
-            doc = resp.json()
-
-    return doc
+def load_json(filename: str) -> dict | list:
+    base = Path('arcanum')
+    with (base / filename).with_suffix('.json').open() as f:
+        return json.load(f)
 
 
-def load_data() -> tuple[dict, list]:
-    cache_dir = Path('.cache')
+def load_data() -> tuple[
+    dict[str, Any],    # package metadata
+    dict[str, Class],  # classes
+]:
+    package = load_json('package')
+    print(f'Loaded data for {package["name"]} {package["version"]}')
 
-    with Session() as session:
-        package = download_or_load(session, cache_dir, 'package.json')
-        classes = download_or_load(session, cache_dir, 'data/classes.json')
+    classes_json = load_json('data/classes')
+    classes = {d['id']: Class(raw=d, **d) for d in classes_json}
+    print(f'{len(classes)} classes')
 
-    return package, classes
+    return package, classes,
 
 
 def render(
@@ -170,12 +156,7 @@ def render(
 
 
 def main() -> None:
-    package, classes_data = load_data()
-    print(f'Loaded data for {package["name"]} {package["version"]}')
-    print(f'{len(classes_data)} classes')
-
-    classes = {d['id']: Class(raw=d, **d) for d in classes_data}
-
+    package, classes, = load_data()
     render(package, classes)
 
 
