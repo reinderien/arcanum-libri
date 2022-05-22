@@ -5,10 +5,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Optional, Union, Iterable, Any
+from typing import Optional, Union, Iterable, Any, Iterator
 from subprocess import check_output
 
 from jinja2 import Environment, FileSystemLoader
+
+import slimit.ast as ast
 from slimit.parser import Parser
 
 parser = Parser()
@@ -42,6 +44,89 @@ class Tier:
 
     def sort_key(self) -> int:
         return self.sequence
+
+
+class MutatedNode:
+    def __init__(self, node: ast.Node) -> None:
+        self.node = node
+        self.children: list[MutatedNode] = [MutatedNode(c) for c in node.children()]
+
+    def __str__(self):
+        s = (
+            type(self.node).__name__
+            + ' ' + getattr(self.node, 'op', '')
+            + ' ' + getattr(self.node, 'value', '')
+        )
+        return s
+
+    def __repr__(self):
+        return str(self)
+
+    def transform(self) -> Optional['MutatedNode']:
+        new_root = self
+
+        # Drop outer Program and ExprStatement wrappers
+        if isinstance(new_root.node, ast.Program):
+            new_root, = new_root.children
+        if isinstance(new_root.node, ast.ExprStatement):
+            new_root, = new_root.children
+
+        if isinstance(new_root.node, ast.Identifier) and new_root.node.value in {'g', 'value'}:
+            return None
+
+        # Flatten nested binary operators that match.
+        if isinstance(new_root.node, ast.BinOp) and new_root.node.op in {'+', '||', '&&'}:
+            i = len(new_root.children)-1
+            while i >= 0:
+                child = new_root.children[i]  # left or right of outer
+                if isinstance(child.node, ast.BinOp) and child.node.op == new_root.node.op:
+                    new_root.children.extend(child.children)
+                    new_root.children.pop(i)
+                    i += len(child.children)
+                i -= 1
+
+        new_children = []
+        for child in new_root.children:
+            replacement = child.transform()
+            if replacement is not None:
+                new_children.append(replacement)
+        new_root.children = new_children
+
+        if len(new_children) == 1:
+            if isinstance(self.node, ast.DotAccessor):
+                return new_children[0]
+            else:
+                print('Warning: singleton', str(self))
+
+        return new_root
+
+    def print(self, level=0) -> None:
+        print('    '*level + str(self))
+        for child in self.children:
+            child.print(level=level+1)
+
+    def describe(self) -> str:
+        if isinstance(self.node, (ast.Number, ast.Identifier)):
+            return self.node.value
+        if isinstance(self.node, ast.BinOp):
+            seps = {
+                '||': ' or ',
+                '&&': ', ',
+                '+': ' or ',
+                '>': ' greater than ',
+                '>=': ' at least ',
+                '<': ' less than ',
+                '<=': ' at most ',
+                '==': ' of ',
+            }
+            sep = seps.get(self.node.op)
+            if sep is not None:
+                return sep.join(n.describe() for n in self.children)
+            else:
+                raise ValueError(f'Operator {self.node.op} is not supported')
+        if isinstance(self.node, ast.DotAccessor):
+            return ' '.join(n.describe() for n in self.children)
+        raise ValueError(f'Not supported: {self}')
 
 
 @dataclass(frozen=True)
@@ -106,6 +191,22 @@ class Class:
         if isinstance(self.disable, str):
             return self.disable,
         return tuple(self.disable)
+
+    @staticmethod
+    def parse_requirements(source: str) -> str:
+        tree = parser.parse(source)
+        mutated = MutatedNode(tree).transform()
+        return mutated.describe()
+
+    @property
+    def friendly_require(self) -> Optional[str]:
+        if self.require:
+            return self.parse_requirements(self.require)
+
+    @property
+    def friendly_need(self) -> Optional[str]:
+        if self.need:
+            return self.parse_requirements(self.need)
 
 
 def sort_tiers(classes: Iterable[Class]) -> list[str]:

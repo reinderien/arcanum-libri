@@ -108,6 +108,12 @@
         {% if class_.desc %}
         <p>{{class_.desc}}</p>
         {% endif %}
+        {% if class_.need %}
+        <p>Needs: {{class_.friendly_need}}.</p>
+        {% endif %}
+        {% if class_.require %}
+        <p>Requires: {{class_.friendly_require}}.</p>
+        {% endif %}
         {% if class_.flavor %}
         <p><em>{{class_.flavor}}</em></p>
         {% endif %}
