@@ -123,7 +123,17 @@
         {% endif %}
         {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
         {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
-        {%- if class_.flavor %}
+        {%- if class_.id in class_deps %}
+        <p>
+          Unlocks:
+          {% for dep in class_deps[class_.id] %}
+          <a href="#class_{{dep.id}}">{{dep.friendly_name}}</a>
+          {%- if not loop.last %}, {% endif %}
+
+          {% endfor %}
+        </p>
+        {% endif %}
+        {% if class_.flavor %}
         <p><em>{{class_.flavor}}</em></p>
         {% endif %}
         {% if class_.cost or class_.modifier_map or class_.result %}

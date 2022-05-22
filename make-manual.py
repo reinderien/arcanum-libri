@@ -100,22 +100,32 @@ class MutatedNode:
         for child in self.children:
             child.print(level=level+1)
 
-    def describe_indexed(self, index: dict[str, Any]) -> tuple[Union[str, 'Class', 'Tier'], ...]:
-        left, right = self.children
+    @property
+    def is_positive(self) -> bool:
+        if not isinstance(self.node, ast.BinOp):
+            return True
+        right = self.children[1].node
+        if not isinstance(right, ast.Number):
+            return True
+
         op = self.node.op
-        n = Decimal(right.node.value)
-        positive = (
+        n = Decimal(right.value)
+
+        return (
             op == '>'
             or (op in {'>=', '=='} and n > 0)
         )
+
+    def describe_indexed(self, index: dict[str, Any]) -> tuple[Union[str, 'Class', 'Tier'], ...]:
+        left, _ = self.children
 
         if (
             (class_ := index.get(left.node.value))
             and isinstance(class_, Class)
         ):
-            if not positive:
-                return 'not a ', class_
-            return class_,
+            if self.is_positive:
+                return class_,
+            return 'not a ', class_
 
         tier = None
         left_name = left.node.value
@@ -124,9 +134,9 @@ class MutatedNode:
         elif left_name == 'evt_helper':
             tier = Tier.from_name(left_name)
         if tier:
-            if not positive:
-                return 'not ', tier
-            return tier,
+            if self.is_positive:
+                return tier,
+            return 'not ', tier
 
         return ()
 
@@ -164,6 +174,17 @@ class MutatedNode:
         for child in self.children:
             yield ' '
             yield from child.describe(index)
+
+    def requirements(self, positive: bool = True) -> Iterator[str]:
+        if isinstance(self.node, ast.Identifier):
+            if positive:
+                yield self.node.value
+
+        this_positive = self.is_positive
+        for child in self.children:
+            yield from child.requirements(
+                positive=positive ^ (not this_positive)
+            )
 
 
 @dataclass(frozen=True)
@@ -230,22 +251,30 @@ class Class:
         return tuple(self.disable)
 
     @staticmethod
-    def parse_requirements(source: str, index: dict[str, Any]) -> Iterable[str]:
+    def describe_requirements(source: str, index: dict[str, Any]) -> Iterable[str]:
         tree = parser.parse(source)
         mutated = MutatedNode(tree).transform()
         return mutated.describe(index)
 
     def friendly_require(self, index: dict[str, Any]) -> Iterable[str]:
-        return self.parse_requirements(self.require, index)
+        return self.describe_requirements(self.require, index)
 
     def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
-        return self.parse_requirements(self.need, index)
+        return self.describe_requirements(self.need, index)
 
     def sort_key(self) -> str:
         return self.friendly_name
 
+    @property
+    def positive_requirements(self) -> Iterator[str]:
+        for source in (self.need, self.require):
+            if source:
+                tree = parser.parse(source)
+                mutated = MutatedNode(tree).transform()
+                yield from mutated.requirements()
 
-def sort_tiers(classes: Iterable[Class]) -> OrderedDict:
+
+def sort_tiers(classes: Iterable[Class]) -> OrderedDict[Tier, Class]:
     classes_by_tier = defaultdict(list)
     for class_ in classes:
         classes_by_tier[class_.tier].append(class_)
@@ -256,6 +285,17 @@ def sort_tiers(classes: Iterable[Class]) -> OrderedDict:
         classes_by_tier.items(),
         key=Tier.sort_key,
     ))
+
+
+def load_class_reverse_requirements(classes: dict[str, Class]) -> dict[str, list[Class]]:
+    requirements = defaultdict(list)
+    for dependent_class in classes.values():
+        for required_name in dependent_class.positive_requirements:
+            depended_class = classes.get(required_name)
+            if depended_class is not None:
+                requirements[required_name].append(dependent_class)
+
+    return requirements
 
 
 def get_branch() -> str:
@@ -273,8 +313,10 @@ def load_json(filename: str) -> dict | list:
 
 
 def load_data() -> tuple[
-    dict[str, Any],    # package metadata
-    dict[str, Class],  # classes
+    dict[str, Any],          # package metadata
+    dict[str, Class],        # classes by ID
+    dict[Tier, Class],       # classes by tier
+    dict[str, list[Class]],  # classes by class dependency
 ]:
     package = load_json('package')
     print(f'Loaded data for {package["name"]} {package["version"]}')
@@ -283,13 +325,18 @@ def load_data() -> tuple[
     classes = {d['id']: Class(raw=d, **d) for d in classes_json}
     print(f'{len(classes)} classes')
 
-    return package, classes,
-
+    return (
+        package,
+        classes,
+        sort_tiers(classes.values()),
+        load_class_reverse_requirements(classes),
+    )
 
 def render(
     package: dict,
     index: dict[str, Any],
-    classes: dict[str, Class],
+    classes_by_tier: dict[Tier, Class],
+    class_deps: dict[str, list[Class]],
 ) -> None:
     env = Environment(
         loader=FileSystemLoader(searchpath='.'),
@@ -305,7 +352,8 @@ def render(
         branch=get_branch(),
         package=package,
         index=index,
-        classes_by_tier=sort_tiers(classes.values()),
+        classes_by_tier=classes_by_tier,
+        class_deps=class_deps,
     )
 
     parent = Path('docs/')
@@ -314,9 +362,9 @@ def render(
 
 
 def main() -> None:
-    package, classes, = load_data()
+    package, classes, classes_by_tier, class_deps = load_data()
     index = classes  # will be expanded
-    render(package, index, classes)
+    render(package, index, classes_by_tier, class_deps)
 
 
 if __name__ == '__main__':
