@@ -128,7 +128,7 @@
           Unlocks:
           {% for dep in class_deps[class_.id] %}
           <a href="#class_{{dep.id}}">{{dep.friendly_name}}</a>
-          {%- if not loop.last %}, {% endif %}
+          {%- if loop.last %}.{% else %}, {% endif %}
 
           {% endfor %}
         </p>
