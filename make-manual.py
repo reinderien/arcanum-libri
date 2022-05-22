@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
@@ -105,10 +106,30 @@ class MutatedNode:
         for child in self.children:
             child.print(level=level+1)
 
-    def describe(self) -> str:
+    def describe(self, index: dict[str, Any]) -> Iterator[Union[str, 'Class']]:
         if isinstance(self.node, (ast.Number, ast.Identifier)):
-            return self.node.value
+            yield index.get(self.node.value, self.node.value)
+            return
+
         if isinstance(self.node, ast.BinOp):
+            if (
+                len(self.children) == 2
+                and isinstance(class_node := self.children[0].node, ast.Identifier)
+                and (class_ := index.get(class_node.value))
+                and isinstance(class_, Class)
+                and isinstance(num_node := self.children[1].node, ast.Number)
+            ):
+                op = self.node.op
+                n = Decimal(num_node.value)
+                positive = (
+                    op == '>'
+                    or (op in {'>=', '=='} and n > 0)
+                )
+                if not positive:
+                    yield 'not a '
+                yield class_
+                return
+
             seps = {
                 '||': ' or ',
                 '&&': ', ',
@@ -120,13 +141,20 @@ class MutatedNode:
                 '==': ' of ',
             }
             sep = seps.get(self.node.op)
-            if sep is not None:
-                return sep.join(n.describe() for n in self.children)
-            else:
+            if sep is None:
                 raise ValueError(f'Operator {self.node.op} is not supported')
-        if isinstance(self.node, ast.DotAccessor):
-            return ' '.join(n.describe() for n in self.children)
-        raise ValueError(f'Not supported: {self}')
+            yield from self.children[0].describe(index)
+            for child in self.children[1:]:
+                yield sep
+                yield from child.describe(index)
+
+        elif isinstance(self.node, ast.DotAccessor):
+            for child in self.children:
+                yield ' '
+                yield from child.describe(index)
+
+        else:
+            raise ValueError(f'Not supported: {self}')
 
 
 @dataclass(frozen=True)
@@ -193,20 +221,16 @@ class Class:
         return tuple(self.disable)
 
     @staticmethod
-    def parse_requirements(source: str) -> str:
+    def parse_requirements(source: str, index: dict[str, Any]) -> Iterable[str]:
         tree = parser.parse(source)
         mutated = MutatedNode(tree).transform()
-        return mutated.describe()
+        return mutated.describe(index)
 
-    @property
-    def friendly_require(self) -> Optional[str]:
-        if self.require:
-            return self.parse_requirements(self.require)
+    def friendly_require(self, index: dict[str, Any]) -> Iterable[str]:
+        return self.parse_requirements(self.require, index)
 
-    @property
-    def friendly_need(self) -> Optional[str]:
-        if self.need:
-            return self.parse_requirements(self.need)
+    def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
+        return self.parse_requirements(self.need, index)
 
 
 def sort_tiers(classes: Iterable[Class]) -> list[str]:
@@ -244,6 +268,7 @@ def load_data() -> tuple[
 
 def render(
     package: dict,
+    index: dict[str, Any],
     classes: dict[str, Class],
 ) -> None:
     env = Environment(
@@ -253,8 +278,11 @@ def render(
     )
     template = env.get_template('template.html')
     content = template.render(
+        isinstance=isinstance,
+        Class=Class,
         branch=get_branch(),
         package=package,
+        index=index,
         classes=classes,
         tiers=sort_tiers(classes.values()),
     )
@@ -266,7 +294,8 @@ def render(
 
 def main() -> None:
     package, classes, = load_data()
-    render(package, classes)
+    index = classes  # will be expanded
+    render(package, index, classes)
 
 
 if __name__ == '__main__':

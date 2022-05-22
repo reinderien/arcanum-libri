@@ -117,13 +117,16 @@
     <section id="class_tier_-3">
       <h3>Tier: Apprentice Classes</h3>
 
-      <section>
+      <section id="class_apprentice">
         <h4>
           Apprentice
         </h4>
         <p>&rightarrow;  Become an apprentice.</p>
         <p>Apprentice to a notable wizard</p>
-        <p>Requires: research.</p>
+        <p>
+          Requires: research.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -136,6 +139,7 @@
             </tbody>
           </table>
 
+          
           <table>
             <thead>
               <tr><th colspan="2">Result</th></tr>
@@ -146,6 +150,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <p>Disables: cleanstables.</p>
@@ -171,12 +176,15 @@
     <section id="class_tier_-2">
       <h3>Tier: Job Classes</h3>
 
-      <section>
+      <section id="class_falconer">
         <h4>
           Falconer
         </h4>
         <p>&rightarrow;  Tend your master's owls and falcons.</p>
-        <p>Requires: animals.</p>
+        <p>
+          Requires: animals.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -214,6 +222,7 @@
               <tr><td>player.exp</td><td>10</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -233,12 +242,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_herbalist">
         <h4>
           Herbalist
         </h4>
         <p>&rightarrow;  Gather herbs for your master's potions and alchemy.</p>
-        <p>Requires: herbalism.</p>
+        <p>
+          Requires: herbalism.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -276,6 +288,7 @@
               <tr><td>player.exp</td><td>10</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -295,12 +308,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_scribe">
         <h4>
           Scribe
         </h4>
         <p>&rightarrow;  Become your master's personal scribe.</p>
-        <p>Requires: scribescroll.</p>
+        <p>
+          Requires: scribescroll.
+        </p>
+
         <p><em>When I get a little money I buy books, and if any is left I buy food and clothes.</em></p>
 
         <div class="stats">
@@ -338,6 +354,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -363,12 +380,15 @@
     <section id="class_tier_-1">
       <h3>Tier: Neophyte Classes</h3>
 
-      <section>
+      <section id="class_neophyte">
         <h4>
           Neophyte
         </h4>
         <p>&rightarrow;  The final step on the twisting stairwell of apprenticeship.</p>
-        <p>Requires: spellbook greater than 0, evt_helper greater than 0, research max at least 125.</p>
+        <p>
+          Requires: spellbook greater than 0, evt_helper greater than 0,  research max at least 125.
+        </p>
+
         <p><em>Why does Master charge so many fees?</em></p>
 
         <div class="stats">
@@ -404,6 +424,7 @@
               <tr><td>player.exp</td><td>10</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -428,14 +449,15 @@
     <section id="class_tier_0">
       <h3>Tier 0 Classes</h3>
 
-      <section>
+      <section id="class_adept">
         <h4>
           Adept
         </h4>
         <p>Your master behind you, you set off into the world alone. You had better find a new place to stay.</p>
 
-        <div class="stats">
 
+        <div class="stats">
+          
           <table>
             <thead>
               <tr><th colspan="2">Modifiers</th></tr>
@@ -444,6 +466,8 @@
               <tr><td>tier0</td><td>True</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -457,13 +481,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_blueadept">
         <h4>
           Blue Adept
           (<em>secret</em>)
         </h4>
         <p>Dedicate yourself to putting the world in order.</p>
-        <p>Requires: neophyte greater than 0, virtue at least 200.</p>
+        <p>
+          Requires: <a href="#class_neophyte">Neophyte</a>, virtue at least 200.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -488,6 +515,8 @@
               <tr><td>naturelore.max</td><td>-1</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -508,14 +537,17 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_savant">
         <h4>
           Mystic Savant
           (<em>secret</em>)
         </h4>
         <p>&rightarrow; Forgo Studies </p>
         <p>You have no need of these dry tomes and musty old books.</p>
-        <p>Requires: arcana at least 5, study at most 0, neophyte greater than 0.</p>
+        <p>
+          Requires: arcana at least 5, study at most 0, <a href="#class_neophyte">Neophyte</a>.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -553,6 +585,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -583,13 +616,16 @@
     <section id="class_tier_1">
       <h3>Tier 1 Classes</h3>
 
-      <section>
+      <section id="class_magician">
         <h4>
           Magician
         </h4>
         <p>&rightarrow;  Pursue the path of pure magic.</p>
         <p>Magic in its purest form.</p>
-        <p>Requires: tier0 greater than 0, lore at least 10.</p>
+        <p>
+          Requires: tier0 greater than 0, lore at least 10.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -628,6 +664,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -652,12 +689,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_darkmagician">
         <h4>
           Dark Magician
         </h4>
         <p>A devotee of black magic.</p>
-        <p>Requires: tier0 greater than 0, shadowlore at least 7.</p>
+        <p>
+          Requires: tier0 greater than 0, shadowlore at least 7.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -699,6 +739,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -723,12 +764,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_reanimator">
         <h4>
           Reanimator
         </h4>
         <p>Create and ressurect living materials.</p>
-        <p>Requires: tier0 greater than 0, reanimation greater than 2.</p>
+        <p>
+          Requires: tier0 greater than 0, reanimation greater than 2.
+        </p>
+
         <p><em>Even the dead have their uses</em></p>
 
         <div class="stats">
@@ -768,6 +812,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <p>Disables: pace.</p>
@@ -793,13 +838,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_witch">
         <h4>
           Witchcraft
         </h4>
         <p>&rightarrow;  Enter into the practice of witchcraft.</p>
         <p>Witch</p>
-        <p>Requires: tier1 of 0, potions at least 3, tier0 greater than 0, animals at least 2.</p>
+        <p>
+          Requires: tier1 of 0, potions at least 3, tier0 greater than 0, animals at least 2.
+        </p>
+
         <p><em>'What is't you do?' 'A deed without a name'</em></p>
 
         <div class="stats">
@@ -839,6 +887,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <p>Disables: pace.</p>
@@ -868,14 +917,17 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_trickster">
         <h4>
           Arcane Trickster
           (<em>secret</em>)
         </h4>
         <p>&rightarrow; Path of Trickery </p>
         <p>Use magic for deceit and trickery.</p>
-        <p>Requires: tier1 of 0, trickery at least 4, tier0 greater than 0.</p>
+        <p>
+          Requires: tier1 of 0, trickery at least 4, tier0 greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -917,6 +969,7 @@
               <tr><td>sp</td><td>3</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <p>Disables: pace.</p>
@@ -947,12 +1000,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_elementalist">
         <h4>
           Elementalist
         </h4>
         <p>Master of elemental forces.</p>
-        <p>Requires: waterlore greater than 2, earthlore greater than 2, firelore greater than 2, tier0 greater than 0, airlore greater than 2.</p>
+        <p>
+          Requires: waterlore greater than 2, earthlore greater than 2, firelore greater than 2, tier0 greater than 0, airlore greater than 2.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -987,6 +1043,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1004,12 +1061,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_oracle">
         <h4>
           Oracle
         </h4>
         <p>A diviner.</p>
-        <p>Requires: divination at least 5, tier0 greater than 0, spiritlore at least 5.</p>
+        <p>
+          Requires: divination at least 5, tier0 greater than 0, spiritlore at least 5.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1051,6 +1111,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1079,13 +1140,16 @@
     <section id="class_tier_2">
       <h3>Tier 2 Classes</h3>
 
-      <section>
+      <section id="class_madcap">
         <h4>
           Mystic Madcap
           (<em>secret</em>)
         </h4>
         <p>A penchant for chaos</p>
-        <p>Requires: tier2 of 0, trickery at least 7, tier1 greater than 0.</p>
+        <p>
+          Requires: tier2 of 0, trickery at least 7, tier1 greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1129,6 +1193,7 @@
               <tr><td>sp</td><td>3</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1160,12 +1225,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_bonemonger">
         <h4>
           Bonemonger
         </h4>
         <p>Extend your life with spare parts from the dead.</p>
-        <p>Requires: tier2 of 0, evil greater than 0, tier1 greater than 0, reanimator at least 1.</p>
+        <p>
+          Requires: tier2 of 0, evil greater than 0, tier1 greater than 0, <a href="#class_reanimator">Reanimator</a>.
+        </p>
+
         <p><em>Even the dead have their uses</em></p>
 
         <div class="stats">
@@ -1206,6 +1274,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1232,12 +1301,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_battlemage">
         <h4>
           Battle Mage
         </h4>
         <p>&rightarrow;  Pursue the path of battle.</p>
-        <p>Requires: tier2 of 0, armory greater than 0, tier1 greater than 0, player level at least 10.</p>
+        <p>
+          Requires: tier2 of 0, armory greater than 0, tier1 greater than 0,  player level at least 10.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1275,6 +1347,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1296,13 +1369,18 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_warden">
         <h4>
           Warden
         </h4>
         <p>A keeper of the forests, mountains, and hills. Only those living in the wild may become wardens.</p>
-        <p>Needs: outdoors or lodge greater than 0.</p>
-        <p>Requires: tier1 greater than 0, naturelore at least 12.</p>
+        <p>
+          Needs: outdoors or lodge greater than 0.
+        </p>
+        <p>
+          Requires: tier1 greater than 0, naturelore at least 12.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1339,6 +1417,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1360,12 +1439,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_alchemist">
         <h4>
           Alchemist
         </h4>
         <p>An alchemist uses magical knowledge to craft wonders.</p>
-        <p>Requires: alchemy at least 5, tier1 greater than 0, potions at least 4.</p>
+        <p>
+          Requires: alchemy at least 5, tier1 greater than 0, potions at least 4.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1408,6 +1490,7 @@
               <tr><td>sp</td><td>3</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1436,12 +1519,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_enchanter">
         <h4>
           Enchanter
         </h4>
         <p>A master of charms and enchantments.</p>
-        <p>Requires: charms at least 3, tier1 greater than 0, enchanting at least 6.</p>
+        <p>
+          Requires: charms at least 3, tier1 greater than 0, enchanting at least 6.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1480,6 +1566,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1501,13 +1588,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_geomancer">
         <h4>
           Geomancer
         </h4>
         <p>&rightarrow;  Become a geomancer, a master of perseverance.</p>
         <p>Lord of rocks.</p>
-        <p>Requires: tier2 of 0, tier1 greater than 0, earthlore at least 10.</p>
+        <p>
+          Requires: tier2 of 0, tier1 greater than 0, earthlore at least 10.
+        </p>
+
         <p><em>Your empire of dirt</em></p>
 
         <div class="stats">
@@ -1545,6 +1635,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1566,13 +1657,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_pyromancer">
         <h4>
           Pyromancer
         </h4>
         <p>&rightarrow;  Become a pyromancer.</p>
         <p>Shaper of fire</p>
-        <p>Requires: tier1 greater than 0, firelore at least 10.</p>
+        <p>
+          Requires: tier1 greater than 0, firelore at least 10.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1608,6 +1702,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1628,13 +1723,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_hydromancer">
         <h4>
           Hydromancer
         </h4>
         <p>&rightarrow;  Become a hydromancer.</p>
         <p>Master of water</p>
-        <p>Requires: tier1 greater than 0, waterlore at least 10.</p>
+        <p>
+          Requires: tier1 greater than 0, waterlore at least 10.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1670,6 +1768,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1690,13 +1789,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_windmage">
         <h4>
           Wind Mage
         </h4>
         <p>&rightarrow;  Become a wind mage.</p>
         <p>To walk on the wind</p>
-        <p>Requires: tier1 greater than 0, airlore at least 10.</p>
+        <p>
+          Requires: tier1 greater than 0, airlore at least 10.
+        </p>
+
         <p><em>There's a storm coming</em></p>
 
         <div class="stats">
@@ -1733,6 +1835,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1754,12 +1857,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_seer">
         <h4>
           Seer
         </h4>
         <p>A diviner.</p>
-        <p>Requires: tier1 greater than 0, divination at least 10.</p>
+        <p>
+          Requires: tier1 greater than 0, divination at least 10.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1798,6 +1904,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1819,12 +1926,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_mage">
         <h4>
           Mage
         </h4>
         <p>Member of an arcane order.</p>
-        <p>Requires: tier1 greater than 0, lore at least 17.</p>
+        <p>
+          Requires: tier1 greater than 0, lore at least 17.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1862,6 +1972,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1887,12 +1998,15 @@
     <section id="class_tier_3">
       <h3>Tier 3 Classes</h3>
 
-      <section>
+      <section id="class_thanophage">
         <h4>
           Thanophage
         </h4>
         <p>Drain corpses of their lingering life-force to prolong your bleak existence.</p>
-        <p>Requires: tier3 of 0, tier2 greater than 0, evil greater than 0.</p>
+        <p>
+          Requires: tier3 of 0, tier2 greater than 0, evil greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -1933,6 +2047,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -1960,11 +2075,14 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_spellblade">
         <h4>
           Spell Blade
         </h4>
-        <p>Requires: tier3 of 0, player tohit at least 10, tier2 greater than 0, enchanting at least 7.</p>
+        <p>
+          Requires: tier3 of 0,  player tohit at least 10, tier2 greater than 0, enchanting at least 7.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2001,6 +2119,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2022,12 +2141,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_dreadlord">
         <h4>
           Dreadlord
         </h4>
         <p>Harbinger of destruction</p>
-        <p>Requires: tier3 of 0, player level at least 17, hp at least 100, tier2 greater than 0, evil greater than 0.</p>
+        <p>
+          Requires: tier3 of 0,  player level at least 17, hp at least 100, tier2 greater than 0, evil greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2066,6 +2188,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2087,12 +2210,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_bloodmage">
         <h4>
           Blood Mage
         </h4>
         <p>The magic in your veins</p>
-        <p>Requires: tier3 of 0, tier2 greater than 0, battlemage greater than 0 or hp max greater than 150.</p>
+        <p>
+          Requires: tier3 of 0, tier2 greater than 0, <a href="#class_battlemage">Battle Mage</a> or  hp max greater than 150.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2134,6 +2260,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2159,12 +2286,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_summoner">
         <h4>
           Summoner
         </h4>
         <p>Alone or with friends, a summoner is never without an army.</p>
-        <p>Requires: lore at least 20, minions greater than 4, tier2 greater than 0.</p>
+        <p>
+          Requires: lore at least 20, minions greater than 4, tier2 greater than 0.
+        </p>
+
         <p><em>How you do I; hope you've met my...</em></p>
 
         <div class="stats">
@@ -2205,6 +2335,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2229,11 +2360,14 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_stormcaller">
         <h4>
           Stormcaller
         </h4>
-        <p>Requires: hydromancer greater than 0 or windmage greater than 0.</p>
+        <p>
+          Requires: <a href="#class_hydromancer">Hydromancer</a> or <a href="#class_windmage">Wind Mage</a>.
+        </p>
+
         <p><em>I am the storm</em></p>
 
         <div class="stats">
@@ -2273,6 +2407,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2297,12 +2432,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_druid">
         <h4>
           Druid
         </h4>
         <p>A spellcaster dedicated to the natural world</p>
-        <p>Requires: tier2 greater than 0, naturelore at least 15.</p>
+        <p>
+          Requires: tier2 greater than 0, naturelore at least 15.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2341,6 +2479,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2362,12 +2501,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_highelemental">
         <h4>
           Highelemental
         </h4>
         <p>Lord of the elements</p>
-        <p>Requires: earthlore greater than 7, waterlore greater than 7, firelore greater than 7, tier2 greater than 0, airlore greater than 7.</p>
+        <p>
+          Requires: earthlore greater than 7, waterlore greater than 7, firelore greater than 7, tier2 greater than 0, airlore greater than 7.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2408,6 +2550,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2434,12 +2577,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_highmage">
         <h4>
           High Mage
         </h4>
         <p>Elite of an arcane order.</p>
-        <p>Requires: tier2 greater than 0, lore at least 21.</p>
+        <p>
+          Requires: tier2 greater than 0, lore at least 21.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2477,6 +2623,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2499,12 +2646,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_doomsayer">
         <h4>
           Doomsayer
         </h4>
         <p>Harbinger of ruin</p>
-        <p>Requires: divination at least 12, tier2 greater than 0, spirit at least 12.</p>
+        <p>
+          Requires: divination at least 12, tier2 greater than 0, spirit at least 12.
+        </p>
+
         <p><em>You call it an empire, but in the gloaming I see only heaps of crumbled stone.</em></p>
 
         <div class="stats">
@@ -2544,6 +2694,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2571,12 +2722,15 @@
     <section id="class_tier_4">
       <h3>Tier 4 Classes</h3>
 
-      <section>
+      <section id="class_bladeweaver">
         <h4>
           Bladeweaver
         </h4>
         <p>You have taken your training further, weaving magic and steel with a flourish of magical grace.</p>
-        <p>Requires: tier4 of 0, tier3 greater than 0, spellblade greater than 0.</p>
+        <p>
+          Requires: tier4 of 0, tier3 greater than 0, <a href="#class_spellblade">Spell Blade</a>.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2618,6 +2772,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2646,12 +2801,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_warlock">
         <h4>
           Warlock
         </h4>
         <p>Master of demons and demonic magic</p>
-        <p>Requires: tier4 of 0, demonology at least 10, tier3 greater than 0, evil greater than 0.</p>
+        <p>
+          Requires: tier4 of 0, demonology at least 10, tier3 greater than 0, evil greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2692,6 +2850,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2718,13 +2877,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_earthshaker">
         <h4>
           Earthshaker
         </h4>
         <p>&rightarrow;  Become an earthshaker.</p>
         <p>Master of the tectonics.</p>
-        <p>Requires: tier4 of 0, tier3 greater than 0, earthlore at least 20.</p>
+        <p>
+          Requires: tier4 of 0, tier3 greater than 0, earthlore at least 20.
+        </p>
+
         <p><em>Finally, a subduction license!</em></p>
 
         <div class="stats">
@@ -2762,6 +2924,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2783,12 +2946,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_sorcerer">
         <h4>
           Sorcerer
         </h4>
         <p>A wielder of raw magical power.</p>
-        <p>Requires: elementalist or highelemental greater than 0, tier3 greater than 0, firelore at least 15 or earthlore at least 15 or waterlore at least 15.</p>
+        <p>
+          Requires: <a href="#class_elementalist">Elementalist</a> or <a href="#class_highelemental">Highelemental</a> greater than 0, tier3 greater than 0, firelore at least 15 or earthlore at least 15 or waterlore at least 15.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2830,6 +2996,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2858,12 +3025,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_fey">
         <h4>
           Fey
         </h4>
         <p>A being of wild and natural magic</p>
-        <p>Requires: elementalist or witch or druid greater than 0, tier3 greater than 0, naturelore at least 19.</p>
+        <p>
+          Requires: <a href="#class_elementalist">Elementalist</a> or <a href="#class_witch">Witchcraft</a> or <a href="#class_druid">Druid</a> greater than 0, tier3 greater than 0, naturelore at least 19.
+        </p>
+
         <p><em>'Will you drink from the goblet?' she asked. 'The transformation cannot be undone.'</em></p>
 
         <div class="stats">
@@ -2906,6 +3076,7 @@
               <tr><td>sp</td><td>1</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -2935,12 +3106,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_thaumaturge">
         <h4>
           Thaumaturge
         </h4>
         <p>A maker of miracles</p>
-        <p>Requires: divination at least 15, tier3 greater than 0, spirit at least 15.</p>
+        <p>
+          Requires: divination at least 15, tier3 greater than 0, spirit at least 15.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -2982,6 +3156,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3009,12 +3184,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_necromancer">
         <h4>
           Necromancer
         </h4>
         <p>A master of death magic</p>
-        <p>Requires: shadowlore at least 17, tier3 greater than 0, evil greater than 0.</p>
+        <p>
+          Requires: shadowlore at least 17, tier3 greater than 0, evil greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -3058,6 +3236,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3087,13 +3266,18 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_wizard">
         <h4>
           Wizard
         </h4>
         <p>Raw magic power</p>
-        <p>Needs: evil at most 0.</p>
-        <p>Requires: lore at least 25, evil at most 0, tier3 greater than 0.</p>
+        <p>
+          Needs: evil at most 0.
+        </p>
+        <p>
+          Requires: lore at least 25, evil at most 0, tier3 greater than 0.
+        </p>
+
         <p><em>'Do not take me for some conjurer of cheap tricks.'</em></p>
 
         <div class="stats">
@@ -3134,6 +3318,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3162,12 +3347,15 @@
     <section id="class_tier_5">
       <h3>Tier 5 Classes</h3>
 
-      <section>
+      <section id="class_arcanedervish">
         <h4>
           Arcane Dervish
         </h4>
         <p>Your skills with blade and magic blend together in a blur, each stroke seeming like a step in a dance.</p>
-        <p>Requires: tier5 of 0, tier4 greater than 0, spellblade greater than 0.</p>
+        <p>
+          Requires: tier5 of 0, tier4 greater than 0, <a href="#class_spellblade">Spell Blade</a>.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -3209,6 +3397,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3238,12 +3427,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_wizard2">
         <h4>
           Dhrunic Wizard
         </h4>
         <p>Raw magic power</p>
-        <p>Requires: tier4 greater than 0, lore at least 30.</p>
+        <p>
+          Requires: tier4 greater than 0, lore at least 30.
+        </p>
+
         <p><em>In the end it was three Thule Wizards and The Necromancer who brought the locks to heel.</em></p>
 
         <div class="stats">
@@ -3278,6 +3470,8 @@
               <tr><td>mana.max</td><td>3</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3306,12 +3500,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_kell">
         <h4>
           Kell
         </h4>
         <p>Immortal spirits of nature, even the weakest Kell are beings to rival wizards</p>
-        <p>Requires: highelemental or witch or fey greater than 0, tier4 greater than 0, naturelore at least 23.</p>
+        <p>
+          Requires: <a href="#class_highelemental">Highelemental</a> or <a href="#class_witch">Witchcraft</a> or <a href="#class_fey">Fey</a> greater than 0, tier4 greater than 0, naturelore at least 23.
+        </p>
+
         <p><em>Kell are not of mortal blood, and only potent magics can imbue a mortal with their essence.</em></p>
 
         <div class="stats">
@@ -3346,6 +3543,8 @@
               <tr><td>herbalism.rate</td><td>15%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3376,12 +3575,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_greynecromancer">
         <h4>
           Grey Necromancer
         </h4>
         <p>Disciple of death</p>
-        <p>Requires: shadowlore at least 24, spiritlore at least 15, tier4 greater than 0, evil greater than 0.</p>
+        <p>
+          Requires: shadowlore at least 24, spiritlore at least 15, tier4 greater than 0, evil greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -3417,6 +3619,8 @@
               <tr><td>spiritlore.rate</td><td>10%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3447,12 +3651,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_archlock">
         <h4>
           Archlock
         </h4>
         <p>Master of demons and demonic magic</p>
-        <p>Requires: warlock greater than 0, demonology at least 20.</p>
+        <p>
+          Requires: <a href="#class_warlock">Warlock</a>, demonology at least 20.
+        </p>
+
         <p><em>In the War of the Locks the Seven raged for Power Absolute, and Dhrune trembled in their wake.</em></p>
 
         <div class="stats">
@@ -3485,6 +3692,8 @@
               <tr><td>demonology.rate</td><td>20%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3512,12 +3721,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_heresiarch">
         <h4>
           Heresiarch
         </h4>
         <p>A reckoning comes.</p>
-        <p>Requires: divination at least 17, tier4 greater than 0, spirit at least 15.</p>
+        <p>
+          Requires: divination at least 17, tier4 greater than 0, spirit at least 15.
+        </p>
+
         <p><em>It waits in time</em></p>
 
         <div class="stats">
@@ -3558,6 +3770,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3588,12 +3801,15 @@
     <section id="class_tier_6">
       <h3>Tier 6 Classes</h3>
 
-      <section>
+      <section id="class_eldritchknight">
         <h4>
           Eldritch Knight
         </h4>
         <p>You have reached the pinnacle of blending steel and sorcery, and your sword strokes seem to cleave the air itself.</p>
-        <p>Requires: tier6 of 0, tier5 greater than 0, spellblade greater than 0.</p>
+        <p>
+          Requires: tier6 of 0, tier5 greater than 0, <a href="#class_spellblade">Spell Blade</a>.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -3635,6 +3851,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3664,13 +3881,16 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_titan">
         <h4>
           Titan
         </h4>
         <p>&rightarrow;  Become a titan.</p>
         <p>A mantle of metal and stone.</p>
-        <p>Requires: tier6 of 0, geosculpting at least 10, hammerlore at least 10, tier5 greater than 0, earthshaker or geomancer greater than 0.</p>
+        <p>
+          Requires: tier6 of 0, geosculpting at least 10, hammerlore at least 10, tier5 greater than 0, <a href="#class_earthshaker">Earthshaker</a> or <a href="#class_geomancer">Geomancer</a> greater than 0.
+        </p>
+
         <p><em>No stone left unturned</em></p>
 
         <div class="stats">
@@ -3709,6 +3929,7 @@
               <tr><td>sp</td><td>2</td></tr>
             </tbody>
           </table>
+
         </div>
 
         <details>
@@ -3734,12 +3955,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_highkell">
         <h4>
           High Kell
         </h4>
         <p>The ranks of the Kell range from the lesser Fey and forest Delki, to ancient spirits, old and indominable.</p>
-        <p>Requires: tier5 greater than 0, fey or kell greater than 0.</p>
+        <p>
+          Requires: tier5 greater than 0, <a href="#class_fey">Fey</a> or <a href="#class_kell">Kell</a> greater than 0.
+        </p>
+
         <p><em>'It's of no consequence to me,' replied Jora. 'I do not die Trill, and there are few things in this world that could do the trick.</em></p>
 
         <div class="stats">
@@ -3773,6 +3997,8 @@
               <tr><td>earthlore.rate</td><td>15%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3803,12 +4029,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_necro3">
         <h4>
           Vile Necromancer
         </h4>
         <p>In every epoch, Death appoints her viceroy.</p>
-        <p>Requires: shadowlore at least 24, spiritlore at least 15, tier5 greater than 0, phylactory greater than 0.</p>
+        <p>
+          Requires: shadowlore at least 24, spiritlore at least 15, tier5 greater than 0, phylactory greater than 0.
+        </p>
+
         <p><em>The greys bowed their heads in fear.</em></p>
 
         <div class="stats">
@@ -3846,6 +4075,8 @@
               <tr><td>spiritlore.rate</td><td>10%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3878,12 +4109,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_deathlock">
         <h4>
           Death Lock
         </h4>
         <p>An unholy synthesis of wizardry and demonology.</p>
-        <p>Requires: tier5 greater than 0, phylactory greater than 0.</p>
+        <p>
+          Requires: tier5 greater than 0, phylactory greater than 0.
+        </p>
+
         <p><em>Narz, Bodias, Vezial. Even among the Archlocks, some names stood in abject terror.</em></p>
 
         <div class="stats">
@@ -3918,6 +4152,8 @@
               <tr><td>demonology.rate</td><td>20%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -3948,13 +4184,18 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_wizard3">
         <h4>
           Mythic Wizard
         </h4>
         <p>Their names reappear throughout the ages, and few believe they ever existed.</p>
-        <p>Needs: evil at most 0.</p>
-        <p>Requires: evil of 0, spellcraft at least 10, tier5 greater than 0, lore at least 35.</p>
+        <p>
+          Needs: evil at most 0.
+        </p>
+        <p>
+          Requires: evil of 0, spellcraft at least 10, tier5 greater than 0, lore at least 35.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -3988,6 +4229,8 @@
               <tr><td>alchemy.max</td><td>1</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -4018,12 +4261,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_astralseer">
         <h4>
           Astral Seer
         </h4>
         <p>The stars are an open book, to those who can read.</p>
-        <p>Requires: planeslore at least 15, tier5 greater than 0, astronomy at least 15.</p>
+        <p>
+          Requires: planeslore at least 15, tier5 greater than 0, astronomy at least 15.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -4059,6 +4305,8 @@
               <tr><td>crafting.max</td><td>2</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
@@ -4089,12 +4337,15 @@
         </details>
       </section>
 
-      <section>
+      <section id="class_c_avatar">
         <h4>
           Avatar
         </h4>
         <p>An incarnation of raw, elemental forces.</p>
-        <p>Requires: tier5 greater than 0, thaumaturge or heresiarch or highelemental or kell greater than 0.</p>
+        <p>
+          Requires: tier5 greater than 0, <a href="#class_thaumaturge">Thaumaturge</a> or <a href="#class_heresiarch">Heresiarch</a> or <a href="#class_highelemental">Highelemental</a> or <a href="#class_kell">Kell</a> greater than 0.
+        </p>
+
 
         <div class="stats">
           <table>
@@ -4131,6 +4382,8 @@
               <tr><td>firelore.rate</td><td>15%</td></tr>
             </tbody>
           </table>
+
+          
         </div>
 
         <details>
