@@ -80,17 +80,6 @@ class MutatedNode:
         if isinstance(new_root.node, ast.Identifier) and new_root.node.value in {'g', 'value'}:
             return None
 
-        # Flatten nested binary operators that match.
-        if isinstance(new_root.node, ast.BinOp) and new_root.node.op in {'+', '||', '&&'}:
-            i = len(new_root.children)-1
-            while i >= 0:
-                child = new_root.children[i]  # left or right of outer
-                if isinstance(child.node, ast.BinOp) and child.node.op == new_root.node.op:
-                    new_root.children.extend(child.children)
-                    new_root.children.pop(i)
-                    i += len(child.children)
-                i -= 1
-
         new_children = []
         for child in new_root.children:
             replacement = child.transform()
