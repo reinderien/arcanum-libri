@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
-from types import NoneType
-from typing import Optional, Union, Iterable, Any, Iterator
 from subprocess import check_output
+from types import NoneType
+from typing import Any, Iterable, Iterator, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader
 
