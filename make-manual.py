@@ -7,7 +7,7 @@ from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Optional, Union, Iterable, Any, Iterator, Sequence
+from typing import Optional, Union, Iterable, Any, Iterator
 from subprocess import check_output
 
 from jinja2 import Environment, FileSystemLoader
@@ -65,7 +65,7 @@ class MutatedNode:
         )
         return s
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
     def transform(self) -> Optional['MutatedNode']:
@@ -100,68 +100,70 @@ class MutatedNode:
         for child in self.children:
             child.print(level=level+1)
 
-    def describe(self, index: dict[str, Any]) -> Iterator[Union[str, 'Class']]:
+    def describe_indexed(self, index: dict[str, Any]) -> tuple[Union[str, 'Class', 'Tier'], ...]:
+        left, right = self.children
+        op = self.node.op
+        n = Decimal(right.node.value)
+        positive = (
+            op == '>'
+            or (op in {'>=', '=='} and n > 0)
+        )
+
+        if (
+            (class_ := index.get(left.node.value))
+            and isinstance(class_, Class)
+        ):
+            if not positive:
+                return 'not a ', class_
+            return class_,
+
+        tier = None
+        left_name = left.node.value
+        if left_name.startswith('tier'):
+            tier = Tier.from_tier_str(left_name)
+        elif left_name == 'evt_helper':
+            tier = Tier.from_name(left_name)
+        if tier:
+            if not positive:
+                return 'not ', tier
+            return tier,
+
+        return ()
+
+    def describe_binop(self, index: dict[str, Any]) -> Iterator[Union[str, 'Class', 'Tier']]:
+        left, right = self.children
+        if (
+            isinstance(left.node, ast.Identifier) and
+            isinstance(right.node, ast.Number)
+        ):
+            fragments = self.describe_indexed(index)
+            if fragments:
+                yield from fragments
+                return
+
+        seps = {
+            '||': ' or ',
+            '&&': ', ',
+            '+': ' or ',
+            '>': ' more than ',
+            '>=': ' at least ',
+            '<': ' less than ',
+            '<=': ' at most ',
+            '==': ' of ',
+        }
+        yield from left.describe(index)
+        yield seps[self.node.op]
+        yield from right.describe(index)
+
+    def describe(self, index: dict[str, Any]) -> Iterator[Union[str, 'Class', 'Tier']]:
+        if isinstance(self.node, ast.BinOp):
+            yield from self.describe_binop(index)
+            return
         if isinstance(self.node, (ast.Number, ast.Identifier)):
             yield index.get(self.node.value, self.node.value)
-            return
-
-        if isinstance(self.node, ast.BinOp):
-            if (
-                len(self.children) == 2
-                and isinstance(index_node := self.children[0].node, ast.Identifier)
-                and isinstance(num_node := self.children[1].node, ast.Number)
-            ):
-                op = self.node.op
-                n = Decimal(num_node.value)
-                positive = (
-                    op == '>'
-                    or (op in {'>=', '=='} and n > 0)
-                )
-                if (
-                    (class_ := index.get(index_node.value))
-                    and isinstance(class_, Class)
-                ):
-                    if not positive:
-                        yield 'not a '
-                    yield class_
-                    return
-
-                tier = None
-                if index_node.value.startswith('tier'):
-                    tier = Tier.from_tier_str(index_node.value)
-                elif index_node.value == 'evt_helper':
-                    tier = Tier.from_name(index_node.value)
-                if tier:
-                    if not positive:
-                        yield 'not '
-                    yield tier
-                    return
-
-            seps = {
-                '||': ' or ',
-                '&&': ', ',
-                '+': ' or ',
-                '>': ' greater than ',
-                '>=': ' at least ',
-                '<': ' less than ',
-                '<=': ' at most ',
-                '==': ' of ',
-            }
-            sep = seps.get(self.node.op)
-            if sep is None:
-                raise ValueError(f'Operator {self.node.op} is not supported')
-            yield from self.children[0].describe(index)
-            for child in self.children[1:]:
-                yield sep
-                yield from child.describe(index)
-
-        elif isinstance(self.node, ast.DotAccessor):
-            for child in self.children:
-                yield ' '
-                yield from child.describe(index)
-
-        else:
-            raise ValueError(f'Not supported: {self}')
+        for child in self.children:
+            yield ' '
+            yield from child.describe(index)
 
 
 @dataclass(frozen=True)
