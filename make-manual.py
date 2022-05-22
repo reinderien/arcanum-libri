@@ -25,6 +25,8 @@ class Tier:
 
     @classmethod
     def from_name(cls, name: str) -> 'Tier':
+        if name == 'evt_helper':
+            name = 'job'
         tier_sequence = {
             'apprentice': -3,
             'job': -2,
@@ -114,9 +116,7 @@ class MutatedNode:
         if isinstance(self.node, ast.BinOp):
             if (
                 len(self.children) == 2
-                and isinstance(class_node := self.children[0].node, ast.Identifier)
-                and (class_ := index.get(class_node.value))
-                and isinstance(class_, Class)
+                and isinstance(index_node := self.children[0].node, ast.Identifier)
                 and isinstance(num_node := self.children[1].node, ast.Number)
             ):
                 op = self.node.op
@@ -125,10 +125,25 @@ class MutatedNode:
                     op == '>'
                     or (op in {'>=', '=='} and n > 0)
                 )
-                if not positive:
-                    yield 'not a '
-                yield class_
-                return
+                if (
+                    (class_ := index.get(index_node.value))
+                    and isinstance(class_, Class)
+                ):
+                    if not positive:
+                        yield 'not a '
+                    yield class_
+                    return
+
+                tier = None
+                if index_node.value.startswith('tier'):
+                    tier = Tier.from_tier_str(index_node.value)
+                elif index_node.value == 'evt_helper':
+                    tier = Tier.from_name(index_node.value)
+                if tier:
+                    if not positive:
+                        yield 'not '
+                    yield tier
+                    return
 
             seps = {
                 '||': ' or ',
@@ -200,7 +215,7 @@ class Class:
                 return Tier.from_tier_str(k)
 
         if self.result.get('evt_helper'):
-            return Tier.from_name('job')
+            return Tier.from_name('evt_helper')
 
         return Tier.from_name(self.id)
 
@@ -279,6 +294,7 @@ def render(
     template = env.get_template('template.html')
     content = template.render(
         isinstance=isinstance,
+        Tier=Tier,
         Class=Class,
         branch=get_branch(),
         package=package,
