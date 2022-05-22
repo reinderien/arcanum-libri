@@ -6,22 +6,30 @@
   <title>Arcanum Libri</title>
   <style>
     html { font-family: Georgia, "Nimbus Roman", serif; }
-
     header { margin: 300pt 0; }
     blockquote { font-style: italic; }
     section { margin-top: 60pt; }
-
     table { margin: 10pt; }
+    a { color: maroon; }
 
     h1 {
       margin: 60pt 0;
       text-align: center;
     }
+
     .stats {
       display: flex;
       align-items: start;
     }
 
+    .toc-columns {
+      column-count: 3;
+      width: fit-content;
+    }
+
+    .toc-columns a {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -49,7 +57,7 @@
     <li>
       <a href="#classes">Classes</a>
       <ol type="i">
-        {% for tier in tiers %}
+        {% for tier in classes_by_tier.keys() %}
         <li>
           <a href="#class_tier_{{tier.sequence}}">{{tier.name}}</a>
         </li>
@@ -89,12 +97,19 @@
 
   <section id="classes">
     <h2>Ⅱ. Classes</h2>
-    {% for tier in tiers %}
+    {% for tier, classes in classes_by_tier.items()  %}
 
     <section id="class_tier_{{tier.sequence}}">
       <h3>{{tier.name}} Classes</h3>
-      {% for class_ in classes.values() %}
-      {% if class_.tier == tier %}
+      {% if len(classes) > 1 %}
+
+      <nav class="toc-columns">
+        {% for class_ in classes %}
+        <a href="#class_{{class_.id}}">{{class_.friendly_name}}</a>
+        {% endfor %}
+      </nav>
+      {% endif %}
+      {% for class_ in classes %}
 
       <section id="class_{{class_.id}}">
         <h4>
@@ -109,8 +124,8 @@
         {% if class_.desc %}
         <p>{{class_.desc}}</p>
         {% endif %}
-        {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
-        {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
+        {{ macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
+        {{ macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
         {% if class_.flavor %}
         <p><em>{{class_.flavor}}</em></p>
         {% endif %}
@@ -132,7 +147,6 @@
           <pre><code>{{class_.formatted_raw}}</code></pre>
         </details>
       </section>
-      {% endif %}
       {% endfor %}
     </section>
     {% endfor %}

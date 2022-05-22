@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import json
+from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Optional, Union, Iterable, Any, Iterator
+from typing import Optional, Union, Iterable, Any, Iterator, Sequence
 from subprocess import check_output
 
 from jinja2 import Environment, FileSystemLoader
@@ -45,8 +46,10 @@ class Tier:
             name=f'Tier {sequence}',
         )
 
-    def sort_key(self) -> int:
-        return self.sequence
+    @staticmethod
+    def sort_key(pair: tuple['Tier', Any]) -> int:
+        tier, by_tier = pair
+        return tier.sequence
 
 
 class MutatedNode:
@@ -247,10 +250,21 @@ class Class:
     def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
         return self.parse_requirements(self.need, index)
 
+    def sort_key(self) -> str:
+        return self.friendly_name
 
-def sort_tiers(classes: Iterable[Class]) -> list[str]:
-    unsorted = {c.tier for c in classes}
-    return sorted(unsorted, key=Tier.sort_key)
+
+def sort_tiers(classes: Iterable[Class]) -> OrderedDict:
+    classes_by_tier = defaultdict(list)
+    for class_ in classes:
+        classes_by_tier[class_.tier].append(class_)
+    for group in classes_by_tier.values():
+        group.sort(key=Class.sort_key)
+
+    return OrderedDict(sorted(
+        classes_by_tier.items(),
+        key=Tier.sort_key,
+    ))
 
 
 def get_branch() -> str:
@@ -294,13 +308,13 @@ def render(
     template = env.get_template('template.html')
     content = template.render(
         isinstance=isinstance,
+        len=len,
         Tier=Tier,
         Class=Class,
         branch=get_branch(),
         package=package,
         index=index,
-        classes=classes,
-        tiers=sort_tiers(classes.values()),
+        classes_by_tier=sort_tiers(classes.values()),
     )
 
     parent = Path('docs/')
