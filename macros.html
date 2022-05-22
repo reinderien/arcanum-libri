@@ -1,6 +1,6 @@
 {% macro require_fragments(predicate, generator, title) %}
 {% if predicate %}
-<p>
+        <p>
           {{title}}: {% for require in generator(index) %}
             {% if isinstance(require, Class) -%}
               <a href="#class_{{require.id}}">{{require.friendly_name}}</a>
@@ -9,11 +9,12 @@
             {%- else %}{{require}}{% endif %}
           {% endfor %}.
         </p>
-{%- endif %}
-{%- endmacro %}
+{% endif %}
+{% endmacro %}
 
 {% macro stats_table(map, title) %}
-{% if map -%}
+{% if map %}
+
           <table>
             <thead>
               <tr><th colspan="2">{{title}}</th></tr>
