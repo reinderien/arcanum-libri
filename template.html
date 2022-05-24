@@ -99,8 +99,36 @@
 
     <section id="class_tier_{{tier.sequence}}">
       <h3>{{tier.name}} Classes</h3>
+      {% if tier.event %}
+      {% if tier.event.desc %}
+      <p>{{tier.event.desc}}</p>
+      {% endif %}
+      {% if tier.event.require %}
+      <p>Requires: {{tier.event.require}}</p>
+      {% endif %}
+      {% if tier.event.mod or tier.event.result %}
+
+      <div class="stats">
+        {{- macros.stats_table(tier.event.mod, 'Modifiers') }}
+        {{- macros.stats_table(tier.event.result, 'Result') }}
+      </div>
+      {% endif %}
+      {% if tier.event.disable %}
+
+      <p>Disables: {{tier.event.disable|join(", ")}}.</p>
+      {% endif %}
+      {% if tier.event.lock %}
+
+      <p>Locks: {% if isinstance(tier.event.lock, list) -%}
+        {{tier.event.lock|join(", ")}}
+        {%- else -%}
+        {{tier.event.lock}}
+        {%- endif %}.</p>
+      {% endif %}
+      {% endif %}
       {% if len(classes) > 1 %}
 
+      <p>Classes:</p>
       <nav class="toc-columns">
         {% for class_ in classes %}
         <a href="#class_{{class_.id}}">{{class_.friendly_name}}</a>

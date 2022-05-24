@@ -282,7 +282,7 @@ class Event:
     desc: str
     name: Optional[str] = None
     require: Optional[str] = None
-    lock: Optional[str] = None
+    lock: Optional[Union[str, list[str]]] = None
     disable: Optional[list[str]] = None
     result: Optional[dict[str, float]] = None
     mod: Optional[dict[str, float]] = None
@@ -378,7 +378,7 @@ def render(db: Database) -> None:
     )
     template = env.get_template('template.html')
     content = template.render(
-        isinstance=isinstance, len=len,
+        isinstance=isinstance, len=len, list=list,
         Tier=Tier, Class=Class,
         **db._asdict(),
     )
