@@ -83,6 +83,7 @@
       A <a href="https://www.python.org">Python</a> script processes these data,
       and then fills out a
       <a href="https://jinja.palletsprojects.com/en/3.1.x">Jinja template</a>.
+      Only data from the core module are loaded; optional modules are omitted.
     </p>
     <p>
       Since this script operates somewhat "close to the metal", it doesn't always translate game code elements into
@@ -117,13 +118,17 @@
 
       <p>Disables: {{tier.event.disable|join(", ")}}.</p>
       {% endif %}
-      {% if tier.event.lock %}
+      {% set tier_locks = tier.event and tier.event.get_lock_tiers(index) %}
+      {% if tier_locks %}
 
-      <p>Locks: {% if isinstance(tier.event.lock, list) -%}
-        {{tier.event.lock|join(", ")}}
-        {%- else -%}
-        {{tier.event.lock}}
-        {%- endif %}.</p>
+      <p>
+        Locks:
+        {% for tier_lock in tier_locks %}
+        <a href="#class_tier_{{tier_lock.sequence}}">{{tier_lock.name}}</a>
+        {%- if loop.last %}.{% else %}, {% endif %}
+
+        {% endfor %}
+      </p>
       {% endif %}
       {% endif %}
 

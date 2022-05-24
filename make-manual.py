@@ -64,6 +64,14 @@ class Tier:
             if event.id.startswith('tier'):
                 yield cls.from_tier_event(event)
 
+    @property
+    def tag(self) -> Optional[str]:
+        if self.id.startswith('tier'):
+            return 't_' + self.id
+        if self.id == 'evt_helper':
+            return 't_job'
+        return None
+
 
 class MutatedNode:
     def __init__(self, node: ast.Node) -> None:
@@ -294,6 +302,15 @@ class Event:
     result: Optional[dict[str, float]] = None
     mod: Optional[dict[str, float]] = None
 
+    def get_lock_tiers(self, index: dict[str, Any]) -> list[Tier]:
+        if not self.lock:
+            return []
+        locks = self.lock if isinstance(self.lock, list) else [self.lock]
+        results = []
+        for lock in locks:
+            results.append(index[lock])
+        return results
+
 
 class Database(NamedTuple):
     package: dict[str, Any]
@@ -329,9 +346,9 @@ class Database(NamedTuple):
             )
         )
         tiers_by_tag = {
-            't_' + tier.id: tier
+            ttag: tier
             for tier in tiers.values()
-            if tier.id.startswith('tier')
+            if (ttag := tier.tag) is not None
         }
 
         index = (
