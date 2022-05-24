@@ -57,7 +57,7 @@
     <li>
       <a href="#classes">Classes</a>
       <ol type="i">
-        {% for tier in classes_by_tier.keys() %}
+        {% for tier in tiers_by_id.values() %}
         <li><a href="#class_tier_{{tier.sequence}}">{{tier.name}}</a></li>
         {% endfor %}
       </ol>
@@ -94,7 +94,8 @@
 
   <section id="classes">
     <h2>Ⅱ. Classes</h2>
-    {% for tier, classes in classes_by_tier.items()  %}
+    {% for tier in tiers_by_id.values()  %}
+    {% set classes = classes_by_tier.get(tier.id, ()) %}
 
     <section id="class_tier_{{tier.sequence}}">
       <h3>{{tier.name}} Classes</h3>

@@ -8,7 +8,7 @@ from pathlib import Path
 from pprint import pformat
 from subprocess import check_output
 from types import NoneType
-from typing import Any, Iterable, Iterator, Optional, Union
+from typing import Any, Iterable, Iterator, Optional, Union, NamedTuple
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -22,34 +22,41 @@ DATA_ROOT = Path('arcanum')
 @dataclass(frozen=True)
 class Tier:
     sequence: int
+    id: str
     name: str
+    event: Optional['Event']
 
     @classmethod
-    def from_name(cls, name: str) -> 'Tier':
-        if name == 'evt_helper':
-            name = 'job'
-        tier_sequence = {
-            'apprentice': -3,
-            'job': -2,
-            'neophyte': -1,
-        }
-        return cls(
-            sequence=tier_sequence[name],
-            name=f'Tier: {name.title()}',
-        )
+    def from_intro_event(cls, event: 'Event') -> 'Tier':
+        if event.id in {'evt_intro', 'evt_scroll', 'evt_alcove'}:
+            sequence = -3
+            name = 'Tier: Apprentice'
+        elif event.id == 'evt_helper':
+            sequence = -2
+            name = 'Tier: Job'
+        return cls(sequence, event.id, name, event)
 
     @classmethod
-    def from_tier_str(cls, tier_str: str) -> 'Tier':
-        sequence = int(tier_str.removeprefix('tier'))
-        return cls(
-            sequence=sequence,
-            name=f'Tier {sequence}',
+    def from_tier_event(cls, event: 'Event') -> 'Tier':
+        sequence = int(event.id.removeprefix('tier'))
+        name = f'Tier {sequence}'
+        return cls(sequence, event.id, name, event)
+
+    def sort_key(self) -> int:
+        return self.sequence
+
+    @classmethod
+    def from_events(cls, events: dict[str, 'Event']) -> Iterator['Tier']:
+        for name in ('evt_scroll', 'evt_helper'):
+            yield cls.from_intro_event(events[name])
+
+        yield Tier(
+            sequence=-1, name='Tier: Neophyte', id='neophyte_pseudotier', event=None,
         )
 
-    @staticmethod
-    def sort_key(pair: tuple['Tier', Any]) -> int:
-        tier, by_tier = pair
-        return tier.sequence
+        for event in events.values():
+            if event.id.startswith('tier'):
+                yield cls.from_tier_event(event)
 
 
 class MutatedNode:
@@ -127,13 +134,9 @@ class MutatedNode:
                 return class_,
             return 'not a ', class_
 
-        tier = None
         left_name = left.node.value
-        if left_name.startswith('tier'):
-            tier = Tier.from_tier_str(left_name)
-        elif left_name == 'evt_helper':
-            tier = Tier.from_name(left_name)
-        if tier:
+        tier = index.get(left_name)
+        if isinstance(tier, Tier):
             if self.is_positive:
                 return tier,
             return 'not ', tier
@@ -217,22 +220,21 @@ class Class:
     def formatted_raw(self) -> str:
         return pformat(self.raw)
 
-    @property
-    def tier(self) -> Tier:
+    def get_tier(self, tiers: dict[str, 'Tier']) -> Tier:
         if self.mod is None:
-            return Tier.from_name(self.id)
+            return tiers['evt_scroll']  # apprentice
 
         if isinstance(self.mod, str):
-            return Tier.from_tier_str(self.mod)
+            return tiers[self.mod]  # tier 0
 
         for k, v in self.mod.items():
             if k.startswith('tier'):
-                return Tier.from_tier_str(k)
+                return tiers[k]
 
         if self.result.get('evt_helper'):
-            return Tier.from_name('evt_helper')
+            return tiers['evt_helper']  # job
 
-        return Tier.from_name(self.id)
+        return tiers['neophyte_pseudotier']
 
     @property
     def modifier_map(self) -> dict[str, Any]:
@@ -243,7 +245,7 @@ class Class:
         return self.mod
 
     @property
-    def disabled_actions(self) -> tuple[str]:
+    def disabled_actions(self) -> tuple[str, ...]:
         if not self.disable:
             return ()
         if isinstance(self.disable, str):
@@ -274,70 +276,101 @@ class Class:
                 yield from mutated.requirements()
 
 
-def sort_tiers(classes: Iterable[Class]) -> OrderedDict[Tier, Class]:
-    classes_by_tier = defaultdict(list)
-    for class_ in classes:
-        classes_by_tier[class_.tier].append(class_)
-    for group in classes_by_tier.values():
-        group.sort(key=Class.sort_key)
-
-    return OrderedDict(sorted(
-        classes_by_tier.items(),
-        key=Tier.sort_key,
-    ))
-
-
-def load_class_reverse_requirements(classes: dict[str, Class]) -> dict[str, list[Class]]:
-    requirements = defaultdict(list)
-    for dependent_class in classes.values():
-        for required_name in dependent_class.positive_requirements:
-            depended_class = classes.get(required_name)
-            if depended_class is not None:
-                requirements[required_name].append(dependent_class)
-
-    return requirements
+@dataclass(frozen=True)
+class Event:
+    id: str
+    desc: str
+    name: Optional[str] = None
+    require: Optional[str] = None
+    lock: Optional[str] = None
+    disable: Optional[list[str]] = None
+    result: Optional[dict[str, float]] = None
+    mod: Optional[dict[str, float]] = None
 
 
-def get_branch() -> str:
-    output = check_output(
-        ('/usr/bin/git', 'branch', '--show-current'),
-        cwd=DATA_ROOT, shell=False, text=True,
-    )
-    return output.rstrip()
+class Database(NamedTuple):
+    package: dict[str, Any]
+    branch: str
+    tiers_by_id: dict[str, Tier]
+    classes_by_id: dict[str, Class]
+    classes_by_tier: dict[str, Class]
+    class_deps: dict[str, list[Class]]
+    index: dict[str, Union[Tier, Class]]
+
+    @staticmethod
+    def _load_json(filename: str) -> dict | list:
+        with (DATA_ROOT / filename).with_suffix('.json').open() as f:
+            return json.load(f)
+
+    @classmethod
+    def from_json(cls) -> 'Database':
+        package = cls._load_json('package')
+        print(f'Loaded data for {package["name"]} {package["version"]}')
+
+        classes = {d['id']: Class(raw=d, **d) for d in cls._load_json('data/classes')}
+        events = {e['id']: Event(**e) for e in cls._load_json('data/events')}
+        tiers = OrderedDict(
+            (t.id, t) for t in sorted(
+                Tier.from_events(events),
+                key=Tier.sort_key,
+            )
+        )
+
+        index = tiers | classes
+
+        return cls(
+            package=package,
+            branch=cls._get_branch(),
+            tiers_by_id=tiers,
+            classes_by_id=classes,
+            classes_by_tier=cls._group_classes(tiers, classes.values()),
+            class_deps=cls._load_class_reverse_deps(classes),
+            index=index,
+        )
+
+    @staticmethod
+    def _group_classes(
+        tiers: dict[str, Tier],
+        classes: Iterable[Class],
+    ) -> OrderedDict[str, Class]:
+
+        classes_by_tier = defaultdict(list)
+        for class_ in classes:
+            tier = class_.get_tier(tiers)
+            classes_by_tier[tier.id].append(class_)
+        for group in classes_by_tier.values():
+            group.sort(key=Class.sort_key)
+
+        def sort_key(pair):
+            tier_id, class_ = pair
+            return tiers[tier_id].sequence
+
+        return OrderedDict(sorted(
+            classes_by_tier.items(),
+            key=sort_key,
+        ))
+
+    @staticmethod
+    def _load_class_reverse_deps(classes: dict[str, Class]) -> dict[str, list[Class]]:
+        requirements = defaultdict(list)
+        for dependent_class in classes.values():
+            for required_name in dependent_class.positive_requirements:
+                depended_class = classes.get(required_name)
+                if depended_class is not None:
+                    requirements[required_name].append(dependent_class)
+
+        return requirements
+
+    @staticmethod
+    def _get_branch() -> str:
+        output = check_output(
+            ('git', 'branch', '--show-current'),
+            cwd=DATA_ROOT, shell=True, text=True,
+        )
+        return output.rstrip()
 
 
-def load_json(filename: str) -> dict | list:
-
-    with (DATA_ROOT / filename).with_suffix('.json').open() as f:
-        return json.load(f)
-
-
-def load_data() -> tuple[
-    dict[str, Any],          # package metadata
-    dict[str, Class],        # classes by ID
-    dict[Tier, Class],       # classes by tier
-    dict[str, list[Class]],  # classes by class dependency
-]:
-    package = load_json('package')
-    print(f'Loaded data for {package["name"]} {package["version"]}')
-
-    classes_json = load_json('data/classes')
-    classes = {d['id']: Class(raw=d, **d) for d in classes_json}
-    print(f'{len(classes)} classes')
-
-    return (
-        package,
-        classes,
-        sort_tiers(classes.values()),
-        load_class_reverse_requirements(classes),
-    )
-
-def render(
-    package: dict,
-    index: dict[str, Any],
-    classes_by_tier: dict[Tier, Class],
-    class_deps: dict[str, list[Class]],
-) -> None:
+def render(db: Database) -> None:
     env = Environment(
         loader=FileSystemLoader(searchpath='.'),
         trim_blocks=True,
@@ -345,26 +378,19 @@ def render(
     )
     template = env.get_template('template.html')
     content = template.render(
-        isinstance=isinstance,
-        len=len,
-        Tier=Tier,
-        Class=Class,
-        branch=get_branch(),
-        package=package,
-        index=index,
-        classes_by_tier=classes_by_tier,
-        class_deps=class_deps,
+        isinstance=isinstance, len=len,
+        Tier=Tier, Class=Class,
+        **db._asdict(),
     )
 
     parent = Path('docs/')
     parent.mkdir(exist_ok=True)
-    (parent / 'index.html').write_text(content)
+    (parent / 'index.html').write_text(content, encoding='utf-8')
 
 
 def main() -> None:
-    package, classes, classes_by_tier, class_deps = load_data()
-    index = classes  # will be expanded
-    render(package, index, classes_by_tier, class_deps)
+    db = Database.from_json()
+    render(db)
 
 
 if __name__ == '__main__':
