@@ -211,6 +211,7 @@ class Class:
     name: Optional[str] = None
     tags: Optional[str] = None
     mod: Union[str, NoneType, dict[str, Union[bool, float]]] = None
+    max: Optional[int] = None
 
     @property
     def friendly_name(self) -> str:
@@ -299,7 +300,7 @@ class Database(NamedTuple):
 
     @staticmethod
     def _load_json(filename: str) -> dict | list:
-        with (DATA_ROOT / filename).with_suffix('.json').open() as f:
+        with (DATA_ROOT / filename).with_suffix('.json').open('rb') as f:
             return json.load(f)
 
     @classmethod
@@ -307,7 +308,13 @@ class Database(NamedTuple):
         package = cls._load_json('package')
         print(f'Loaded data for {package["name"]} {package["version"]}')
 
-        classes = {d['id']: Class(raw=d, **d) for d in cls._load_json('data/classes')}
+        classes = {
+            d['id']: Class(raw=d, **d) for d in
+            (
+                *cls._load_json('data/classes'),
+                *cls._load_json('data/hall')['data']['classes']
+            )
+        }
         events = {e['id']: Event(**e) for e in cls._load_json('data/events')}
         tiers = OrderedDict(
             (t.id, t) for t in sorted(
