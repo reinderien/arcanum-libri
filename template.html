@@ -58,7 +58,7 @@
       <a href="#classes">Classes</a>
       <ol type="i">
         {% for tier in tiers_by_id.values() %}
-        <li><a href="#class_tier_{{tier.sequence}}">{{tier.name}}</a></li>
+        <li><a href="#class_tier_{{tier.sequence}}">{{tier.title}}</a></li>
         {% endfor %}
       </ol>
     </li>
@@ -98,7 +98,7 @@
     {% set classes = classes_by_tier.get(tier.id, ()) %}
 
     <section id="class_tier_{{tier.sequence}}">
-      <h3>{{tier.name}} Classes</h3>
+      <h3>{{tier.title}}</h3>
       {% if tier.event %}
       {% if tier.event.desc %}
       <p>{{tier.event.desc}}</p>
@@ -126,9 +126,9 @@
         {%- endif %}.</p>
       {% endif %}
       {% endif %}
-      {% if len(classes) > 1 %}
 
-      <p>Classes:</p>
+      {% if len(classes) > 1 %}
+      <h4>Classes</h4>
       <nav class="toc-columns">
         {% for class_ in classes %}
         <a href="#class_{{class_.id}}">{{class_.friendly_name}}</a>

@@ -26,14 +26,20 @@ class Tier:
     name: str
     event: Optional['Event']
 
+    @property
+    def title(self) -> str:
+        if self.event and self.event.name:
+            return f'{self.name}: {self.event.name}'
+        return self.name
+
     @classmethod
     def from_intro_event(cls, event: 'Event') -> 'Tier':
         if event.id in {'evt_intro', 'evt_scroll', 'evt_alcove'}:
             sequence = -3
-            name = 'Tier: Apprentice'
+            name = 'Apprentice Tier'
         elif event.id == 'evt_helper':
             sequence = -2
-            name = 'Tier: Job'
+            name = 'Job Tier'
         return cls(sequence, event.id, name, event)
 
     @classmethod
@@ -47,11 +53,11 @@ class Tier:
 
     @classmethod
     def from_events(cls, events: dict[str, 'Event']) -> Iterator['Tier']:
-        for name in ('evt_scroll', 'evt_helper'):
+        for name in ('evt_alcove', 'evt_helper'):
             yield cls.from_intro_event(events[name])
 
         yield Tier(
-            sequence=-1, name='Tier: Neophyte', id='neophyte_pseudotier', event=None,
+            sequence=-1, name='Neophyte Tier', id='neophyte_pseudotier', event=None,
         )
 
         for event in events.values():
@@ -223,7 +229,7 @@ class Class:
 
     def get_tier(self, tiers: dict[str, 'Tier']) -> Tier:
         if self.mod is None:
-            return tiers['evt_scroll']  # apprentice
+            return tiers['evt_alcove']  # apprentice
 
         if isinstance(self.mod, str):
             return tiers[self.mod]  # tier 0
@@ -322,8 +328,17 @@ class Database(NamedTuple):
                 key=Tier.sort_key,
             )
         )
+        tiers_by_tag = {
+            't_' + tier.id: tier
+            for tier in tiers.values()
+            if tier.id.startswith('tier')
+        }
 
-        index = tiers | classes
+        index = (
+            tiers
+            | tiers_by_tag
+            | classes
+        )
 
         return cls(
             package=package,
