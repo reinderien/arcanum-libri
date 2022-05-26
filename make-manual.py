@@ -23,14 +23,14 @@ DATA_ROOT = Path('arcanum')
 class Tier:
     sequence: int
     id: str
-    name: str
+    friendly_name: str
     event: Optional['Event']
 
     @property
     def title(self) -> str:
         if self.event and self.event.name:
-            return f'{self.name}: {self.event.name}'
-        return self.name
+            return f'{self.friendly_name}: {self.event.name}'
+        return self.friendly_name
 
     @classmethod
     def from_intro_event(cls, event: 'Event') -> 'Tier':
@@ -57,7 +57,7 @@ class Tier:
             yield cls.from_intro_event(events[name])
 
         yield Tier(
-            sequence=-1, name='Neophyte Tier', id='neophyte_pseudotier', event=None,
+            sequence=-1, friendly_name='Neophyte Tier', id='neophyte_pseudotier', event=None,
         )
 
         for event in events.values():
@@ -71,6 +71,10 @@ class Tier:
         if self.id == 'evt_helper':
             return 't_job'
         return None
+
+    @property
+    def permalink(self) -> str:
+        return f'class_tier_{self.sequence}'
 
 
 class MutatedNode:
@@ -290,6 +294,10 @@ class Class:
                 mutated = MutatedNode(tree).transform()
                 yield from mutated.requirements()
 
+    @property
+    def permalink(self) -> str:
+        return f'class_{self.id}'
+
 
 @dataclass(frozen=True)
 class Event:
@@ -417,7 +425,7 @@ def render(db: Database) -> None:
     )
     template = env.get_template('template.html')
     content = template.render(
-        isinstance=isinstance, len=len, list=list,
+        isinstance=isinstance, hasattr=hasattr, len=len, list=list,
         Tier=Tier, Class=Class,
         **db._asdict(),
     )

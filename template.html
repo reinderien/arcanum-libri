@@ -58,7 +58,7 @@
       <a href="#classes">Classes</a>
       <ol type="i">
         {% for tier in tiers_by_id.values() %}
-        <li><a href="#class_tier_{{tier.sequence}}">{{tier.title}}</a></li>
+        <li><a href="#{{tier.permalink}}">{{tier.title}}</a></li>
         {% endfor %}
       </ol>
     </li>
@@ -124,7 +124,7 @@
       <p>
         Locks:
         {% for tier_lock in tier_locks %}
-        <a href="#class_tier_{{tier_lock.sequence}}">{{tier_lock.name}}</a>
+        <a href="#{{tier_lock.permalink}}">{{tier_lock.friendly_name}}</a>
         {%- if loop.last %}.{% else %}, {% endif %}
 
         {% endfor %}
@@ -136,13 +136,13 @@
       <h4>Classes</h4>
       <nav class="toc-columns">
         {% for class_ in classes %}
-        <a href="#class_{{class_.id}}">{{class_.friendly_name}}</a>
+        <a href="#{{class_.permalink}}">{{class_.friendly_name}}</a>
         {% endfor %}
       </nav>
       {% endif %}
       {% for class_ in classes %}
 
-      <section id="class_{{class_.id}}">
+      <section id="{{class_.permalink}}">
         <h4>
           {{class_.friendly_name}}
           {% if class_.secret %}
@@ -161,7 +161,7 @@
         <p>
           Unlocks:
           {% for dep in class_deps[class_.id] %}
-          <a href="#class_{{dep.id}}">{{dep.friendly_name}}</a>
+          <a href="#{{dep.permalink}}">{{dep.friendly_name}}</a>
           {%- if loop.last %}.{% else %}, {% endif %}
 
           {% endfor %}
