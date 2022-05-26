@@ -98,7 +98,7 @@
     {% for tier in tiers_by_id.values()  %}
     {% set classes = classes_by_tier.get(tier.id, ()) %}
 
-    <section id="class_tier_{{tier.sequence}}">
+    <section id="{{tier.permalink}}">
       <h3>{{tier.title}}</h3>
       {% if tier.event %}
       {% if tier.event.desc %}
