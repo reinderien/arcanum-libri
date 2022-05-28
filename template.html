@@ -248,11 +248,13 @@
     {% for level, skills in skills_by_level.items() %}
     <section id="level_{{level}}_skills">
       <h3>{{level_name(level)}} Skills</h3>
-
       {% for skill in skills %}
+
       <section id="{{skill.permalink}}">
         <h4>{{skill.friendly_name}}</h4>
-
+        {% if skill.verb %}
+        <p>Verb: {{skill.verb}}&hellip;</p>
+        {% endif %}
         {% if skill.desc %}
         <p>{{skill.desc}}</p>
         {% endif %}
