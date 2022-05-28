@@ -83,8 +83,19 @@
 
     <li>
       <a href="#skills">Skills</a>
-      <ol type="i" class="toc-columns">
+      <ol type="i">
+        {% for level, skills in skills_by_level.items() %}
 
+        <li>
+          <a href="#level_{{level}}_skills">{{level_name(level)}} Skills</a>
+
+          <ul>
+            {% for skill in skills %}
+            <li><a href="#{{skill.permalink}}">{{skill.friendly_name}}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
       </ol>
     </li>
   </ol>
@@ -227,7 +238,18 @@
 
   <section id="skills">
     <h2>Ⅳ. Skills</h2>
+    {% for level, skills in skills_by_level.items() %}
+    <section id="level_{{level}}_skills">
+      <h3>{{level_name(level)}} Skills</h3>
 
+      {% for skill in skills %}
+      <section id="{{skill.permalink}}">
+        <h4>{{skill.friendly_name}}</h4>
+
+      </section>
+      {% endfor %}
+    </section>
+    {% endfor %}
   </section>
 </main>
 

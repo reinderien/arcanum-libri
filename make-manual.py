@@ -9,7 +9,7 @@ from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Any, Iterable, Iterator, Optional, Union, NamedTuple
+from typing import Any, Iterable, Iterator, Optional, Union, NamedTuple, Collection
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -341,6 +341,17 @@ class Skill:
     alias: Optional[str] = None
     effect: Optional[dict[str, float]] = None
 
+    @property
+    def friendly_name(self) -> str:
+        return (self.name or self.id).title()
+
+    @property
+    def permalink(self) -> str:
+        return 'skill_' + self.id
+
+    def sort_key(self) -> str:
+        return self.friendly_name
+
 
 class Database(NamedTuple):
     package: dict[str, Any]
@@ -350,6 +361,7 @@ class Database(NamedTuple):
     classes_by_tier: dict[str, Class]
     classes_by_name: list[Class]
     class_deps: dict[str, list[Class]]
+    skills_by_level: dict[int, list[Skill]]
     index: dict[str, Union[Tier, Class]]
 
     @staticmethod
@@ -375,7 +387,7 @@ class Database(NamedTuple):
         package = cls._load_json('package')
         print(f'Loaded data for {package["name"]} {package["version"]}')
 
-        classes = {
+        classes_by_id = {
             d['id']: Class(raw=d, **d) for d in
             (
                 *cls._load_json('data/classes'),
@@ -395,22 +407,24 @@ class Database(NamedTuple):
             if (ttag := tier.tag) is not None
         }
 
-        skills = {(s := Skill(**data)).id: s for data in cls._load_json('data/skills')}
+        skills_by_id, skills_by_level = cls._group_skills(cls._load_json('data/skills'))
 
         index = (
             tiers
             | tiers_by_tag
-            | classes
+            | classes_by_id
+            | skills_by_id
         )
 
         return cls(
             package=package,
             branch=cls._get_branch(),
             tiers_by_id=tiers,
-            classes_by_id=classes,
-            classes_by_tier=cls._group_classes(tiers, classes.values()),
-            classes_by_name=sorted(classes.values(), key=Class.sort_key),
-            class_deps=cls._load_class_reverse_deps(classes),
+            classes_by_id=classes_by_id,
+            classes_by_tier=cls._group_classes(tiers, classes_by_id.values()),
+            classes_by_name=sorted(classes_by_id.values(), key=Class.sort_key),
+            class_deps=cls._load_class_reverse_deps(classes_by_id),
+            skills_by_level=skills_by_level,
             index=index,
         )
 
@@ -448,6 +462,28 @@ class Database(NamedTuple):
         return requirements
 
     @staticmethod
+    def _group_skills(
+        skills: Collection[dict[str, Any]],
+    ) -> tuple[
+         dict[str, Skill],
+         dict[int, list[Skill]],
+     ]:
+        by_id = {
+            (s := Skill(**data)).id: s
+            for data in skills
+        }
+
+        by_level = defaultdict(list)
+        for skill in by_id.values():
+            by_level[skill.level or 0].append(skill)
+
+        for level_skills in by_level.values():
+            level_skills.sort(key=Skill.sort_key)
+
+        ordered_by_level = OrderedDict(sorted(by_level.items()))
+        return by_id, ordered_by_level
+
+    @staticmethod
     def _get_branch() -> str:
         cmd = shutil.which('git')
         output = subprocess.check_output(
@@ -455,6 +491,12 @@ class Database(NamedTuple):
             cwd=DATA_ROOT, shell=False, text=True,
         )
         return output.rstrip()
+
+
+def level_name(level: int) -> str:
+    if level < 1:
+        return 'Base'
+    return f'Level {level}'
 
 
 def render(db: Database) -> None:
@@ -466,6 +508,7 @@ def render(db: Database) -> None:
     template = env.get_template('template.html')
     content = template.render(
         isinstance=isinstance, hasattr=hasattr, len=len, list=list,
+        level_name=level_name,
         Tier=Tier, Class=Class,
         **db._asdict(),
     )
