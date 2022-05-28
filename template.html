@@ -266,7 +266,7 @@
         {%- if skill.flavor %}
         <p><em>{{skill.flavor}}</em></p>
         {% endif %}
-        {% if skill.cost or skill.modifier_map or skill.result %}
+        {% if skill.buy or skill.run or skill.mod or skill.effect or skill.result %}
 
         <div class="stats">
           {{- macros.stats_table(skill.buy, 'Cost') }}
