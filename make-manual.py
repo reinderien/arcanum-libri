@@ -229,10 +229,18 @@ class HasRequirements:
         return self.describe_requirements(self.need, index)
 
 
-@dataclass(frozen=True)
-class Class(HasRequirements):
-    id: str
+class HasRaw:
     raw: dict
+
+    @property
+    def formatted_raw(self) -> str:
+        return pformat(self.raw)
+
+
+@dataclass(frozen=True)
+class Class(HasRaw, HasRequirements):
+    raw: dict
+    id: str
     actdesc: Optional[str] = None
     require: Optional[str] = None
     cost: Optional[dict[str, int]] = None
@@ -255,10 +263,6 @@ class Class(HasRequirements):
     @property
     def friendly_name(self) -> str:
         return (self.name or self.id).title()
-
-    @property
-    def formatted_raw(self) -> str:
-        return pformat(self.raw)
 
     def get_tier(self, tiers: dict[str, 'Tier']) -> Tier:
         if self.mod is None:
@@ -309,7 +313,8 @@ class Class(HasRequirements):
 
 
 @dataclass(frozen=True)
-class Event:
+class Event(HasRaw, HasRequirements):
+    raw: dict
     id: str
     desc: str
     name: Optional[str] = None
@@ -330,7 +335,8 @@ class Event:
 
 
 @dataclass(frozen=True)
-class Skill(HasRequirements):
+class Skill(HasRaw, HasRequirements):
+    raw: dict
     id: str
     run: dict[str, float]
     mod: dict[str, float]
@@ -402,7 +408,7 @@ class Database(NamedTuple):
                 *cls._load_json('data/hall')['data']['classes']
             )
         }
-        events = {(e := Event(**data)).id: e for data in cls._load_json('data/events')}
+        events = {e['id']: Event(raw=e, **e) for e in cls._load_json('data/events')}
         tiers = OrderedDict(
             (t.id, t) for t in sorted(
                 Tier.from_events(events),
@@ -477,8 +483,8 @@ class Database(NamedTuple):
          dict[int, list[Skill]],
      ]:
         by_id = {
-            (s := Skill(**data)).id: s
-            for data in skills
+            s['id']: Skill(raw=s, **s)
+            for s in skills
         }
 
         by_level = defaultdict(list)

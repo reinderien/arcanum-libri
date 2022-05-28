@@ -172,6 +172,13 @@
         <a href="#{{class_.permalink}}">{{class_.friendly_name}}</a>
         {% endfor %}
       </nav>
+      {% if tier.event %}
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{{tier.event.formatted_raw}}</code></pre>
+      </details>
+      {% endif %}
     </section>
     {% endfor %}
   </section>
@@ -267,6 +274,11 @@
           {{- macros.stats_table(skill.result, 'Result') }}
         </div>
         {% endif %}
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{{skill.formatted_raw}}</code></pre>
+        </details>
 
       </section>
       {% endfor %}

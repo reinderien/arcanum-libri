@@ -375,6 +375,15 @@
       <nav class="toc-columns">
         <a href="#class_apprentice">Apprentice</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'After taking your savings, your new master grants you a small nook '
+         'under the stairs.',
+ 'id': 'evt_alcove',
+ 'name': 'Moving In',
+ 'require': 'alcove'}</code></pre>
+      </details>
     </section>
 
     <section id="tier_-2">
@@ -408,6 +417,21 @@
         <a href="#class_herbalist">Herbalist</a>
         <a href="#class_scribe">Scribe</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'In return for your new services, your master grants you a small '
+         'allowance for your studies. The position does require of course, '
+         'some initial fees...',
+ 'id': 'evt_helper',
+ 'lock': 't_job',
+ 'name': 'Promotion',
+ 'result': {'arcana.rate': 0.0001,
+            'lore.max': 1,
+            'lore.rate': 0.1,
+            'player.exp': 10,
+            'research.max': 10}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_-1">
@@ -462,6 +486,27 @@
         <a href="#class_blueadept">Blue Adept</a>
         <a href="#class_savant">Mystic Savant</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': "Some say the study of magic doesn't truly begin until apprenticeship "
+         'ends. People say a lot of things.',
+ 'disable': ['study',
+             'chores',
+             'errands',
+             'leavemaster',
+             'slaymaster',
+             'pestcontrol',
+             'alcove',
+             'atticbedroom'],
+ 'id': 'tier0',
+ 'lock': 't_tier0',
+ 'mod': {'buyscroll.cost.gold': 20,
+         'buyscroll.result.scrolls': 1,
+         'research.max': 15},
+ 'name': 'Solitary Magic',
+ 'result': {'fame': 1, 'innroom': True, 'player.exp': 15, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_1">
@@ -514,6 +559,25 @@
         <a href="#class_reanimator">Reanimator</a>
         <a href="#class_witch">Witchcraft</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'Every province has its handful of runaway apprentices and failed '
+         "Adepts. It's not uncommon for thieves and rangers to know a spell or "
+         'two. They are nothing compared to the talents of a true '
+         'professional.',
+ 'disable': ['prestidigitation'],
+ 'id': 'tier1',
+ 'lock': ['t_tier1', 't_tier0'],
+ 'mod': {'arcanebody.max': 1,
+         'buyscroll.cost.gold': 30,
+         'buyscroll.result.scrolls': 1,
+         'crafting.max': 1,
+         'crystalmind.max': 1,
+         'occultendure.max': 1},
+ 'name': 'Professional Magick',
+ 'result': {'fame': 2, 'player.exp': 15, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_2">
@@ -566,6 +630,21 @@
         <a href="#class_warden">Warden</a>
         <a href="#class_windmage">Wind Mage</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'The masses of arcane dabblers never reach such heights.',
+ 'id': 'tier2',
+ 'lock': 't_tier2',
+ 'mod': {'arcanebody.max': 1,
+         'buyscroll.cost.gold': 40,
+         'buyscroll.result.scrolls': 1,
+         'crystalmind.max': 1,
+         'lore.max': 2,
+         'occultendure.max': 1},
+ 'name': 'Arcane Ascendant',
+ 'result': {'fame': 3}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_3">
@@ -619,6 +698,22 @@
         <a href="#class_summoner">Summoner</a>
         <a href="#class_thanophage">Thanophage</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'You are a master of your field of magic.',
+ 'id': 'tier3',
+ 'lock': 't_tier3',
+ 'mod': {'arcanebody.max': 1,
+         'buyscroll.cost.gold': 50,
+         'buyscroll.result.scrolls': 1,
+         'crafting.max': 2,
+         'crystalmind.max': 1,
+         'lore.max': 3,
+         'occultendure.max': 1},
+ 'name': 'Magical Mastery',
+ 'result': {'fame': 4, 'player.exp': 50, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_4">
@@ -670,6 +765,21 @@
         <a href="#class_warlock">Warlock</a>
         <a href="#class_wizard">Wizard</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'Not even the masters could challenge you.',
+ 'disable': ['buyscroll'],
+ 'id': 'tier4',
+ 'lock': 't_tier4',
+ 'mod': {'arcanebody.max': 1,
+         'crafting.max': 2,
+         'crystalmind.max': 1,
+         'lore.max': 4,
+         'occultendure.max': 1},
+ 'name': 'Supreme Sorcery',
+ 'result': {'fame': 5, 'player.exp': 75, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_5">
@@ -718,6 +828,21 @@
         <a href="#class_heresiarch">Heresiarch</a>
         <a href="#class_kell">Kell</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'Magic from a forgotten age.',
+ 'id': 'tier5',
+ 'lock': 't_tier5',
+ 'mod': {'arcanebody.max': 1,
+         'arcanebody2.max': 2,
+         'crafting.max': 2,
+         'crystalmind.max': 2,
+         'lore.max': 4,
+         'occultendure.max': 1},
+ 'name': 'Dhrunic Magic',
+ 'result': {'fame': 6, 'player.exp': 100, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_6">
@@ -768,6 +893,21 @@
         <a href="#class_titan">Titan</a>
         <a href="#class_necro3">Vile Necromancer</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'Ages of the world come and go; only these endure.',
+ 'id': 'tier6',
+ 'lock': 't_tier6',
+ 'mod': {'arcanebody.max': 1,
+         'arcanebody2.max': 1,
+         'crafting.max': 4,
+         'crystalmind.max': 1,
+         'lore.max': 3,
+         'occultendure.max': 1},
+ 'name': 'Ageless Magic',
+ 'result': {'fame': 7, 'player.exp': 100, 'sp': 1}}</code></pre>
+      </details>
     </section>
 
     <section id="tier_7">
@@ -811,6 +951,21 @@
       <nav class="toc-columns">
         <a href="#class_pillarfire">Pillar Of Flame</a>
       </nav>
+
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{'desc': 'A foundation of the world',
+ 'id': 'tier7',
+ 'lock': 't_tier7',
+ 'mod': {'arcanebody.max': 1,
+         'arcanebody2.max': 2,
+         'crafting.max': 2,
+         'crystalmind.max': 1,
+         'lore.max': 4,
+         'occultendure.max': 1},
+ 'name': 'Dhrunic Pillar',
+ 'result': {'fame': 8, 'player.exp': 100, 'sp': 1}}</code></pre>
+      </details>
     </section>
   </section>
 
@@ -5207,6 +5362,16 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'alchemy',
+ 'mod': {'potions.rate': '1%', 'research.max': 5},
+ 'require': 'g.tier0>0&&g.herbalism>=4',
+ 'result': {'research': 5, 'sp': 0.1},
+ 'run': {'stamina': 0.5},
+ 'school': 'elemental'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_animals">
         <h4>Animal Handling</h4>
@@ -5256,6 +5421,18 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'research': 20},
+ 'flavor': 'Tend the rabbits. Or horses.',
+ 'id': 'animals',
+ 'mod': {'research.max': 1},
+ 'name': 'animal handling',
+ 'need': 't_pets',
+ 'result': {'research': 5, 'sp': 0.05},
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_astronomy">
         <h4>Astronomy</h4>
@@ -5295,6 +5472,15 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'astronomy',
+ 'mod': {'planeslore.rate': '1%', 'research.max': 5},
+ 'need': 'starsource',
+ 'result': {'sp': 0.04},
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_concentrate">
         <h4>Concentration</h4>
@@ -5303,6 +5489,17 @@
         <p>
           Requires: mustylibrary or loc_spring at least 2.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Keep your mind and nerves sharp under pressure.',
+ 'id': 'concentrate',
+ 'mod': {'history.rate': '1%', 'stress.max': 1},
+ 'name': 'concentration',
+ 'require': '(g.mustylibrary+g.loc_spring)>=2',
+ 'run': {'stamina': 0.2},
+ 'verb': 'concentrating'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_conjuration">
@@ -5347,6 +5544,19 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': '',
+ 'flavor': 'Who knows where things come from? They just appear.',
+ 'id': 'conjuration',
+ 'mod': {'research.max': 1, 'summoning.max': 0.2, 'summoning.rate': 0.1},
+ 'require': 'g.lore>=10&&g.divination>3',
+ 'result': {'arcana': 0.2, 'sp': 0.05},
+ 'run': {'spirit': 0.2, 'stamina': 0.2},
+ 'school': 'arcane',
+ 'verb': 'conjuring'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_crafting">
@@ -5396,6 +5606,17 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'research': 20},
+ 'desc': 'An absolutely vital skill for a wizard to craft arcane items.',
+ 'id': 'crafting',
+ 'mod': {'research.max': 1},
+ 'need': 'workspace',
+ 'result': {'sp': 0.1},
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_dissection">
         <h4>Dissection</h4>
@@ -5435,6 +5656,16 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'dissection',
+ 'mod': {'research.max': 5},
+ 'need': 'g.anatomy>=3',
+ 'result': {'bones': 1, 'sp': 0.1},
+ 'run': {'stamina': 0.5},
+ 'school': 'shadow'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_divination">
@@ -5489,6 +5720,19 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The art of foretelling',
+ 'effect': {'arcana': 0.001},
+ 'id': 'divination',
+ 'mod': {'research.max': 1, 'spirit.rate': 0.01},
+ 'need': 'spiritsource',
+ 'require': 'g.spiritlore>=6||g.mysticism>=5',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.4},
+ 'school': 'spirit'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_embalming">
         <h4>Embalming</h4>
@@ -5528,6 +5772,16 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'embalming',
+ 'mod': {'research.max': 1, 'shadow.rate': 0.01},
+ 'require': 'g.dissection>=3',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.5},
+ 'school': 'shadow'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_enchanting">
@@ -5570,6 +5824,16 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Imbue mundane gems and items with magical properties.',
+ 'id': 'enchanting',
+ 'mod': {'charms.rate': '1%', 'enchantslots.max': 1},
+ 'require': 'g.tier1>0&&g.lore>=14',
+ 'result': {'arcana': 0.1, 'sp': 0.05},
+ 'run': {'research': 1, 'stamina': 0.4}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_herbalism">
@@ -5623,6 +5887,18 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'research': 25},
+ 'id': 'herbalism',
+ 'mod': {'herbs.max': 2, 'research.max': 2},
+ 'need': 'plantsource',
+ 'require': 'lore',
+ 'result': {'sp': 0.01},
+ 'run': {'stamina': 0.25},
+ 'school': 'nature'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_languages">
         <h4>Languages</h4>
@@ -5674,6 +5950,20 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'research': 10},
+ 'desc': 'Books and scrolls are written in many obscure languages. Learn as '
+         'many as possible.',
+ 'id': 'languages',
+ 'mod': {'lore.rate': 0.1, 'research.max': 5, 'research.rate': 0.05},
+ 'require': 'lore',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.2},
+ 'school': 'lore',
+ 'verb': 'linguisticizing'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_lore">
         <h4>Mage Lore</h4>
@@ -5722,6 +6012,21 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'research': 20},
+ 'desc': 'Nothing is more important to a wizard than the depth of their lore.',
+ 'id': 'lore',
+ 'locked': False,
+ 'mod': {'arcana.max': 1, 'research.max': 5, 'spelllist.max': 0.5},
+ 'name': 'mage lore',
+ 'result': {'arcana': 1},
+ 'run': {'stamina': 0.2},
+ 'school': 'arcane',
+ 'tags': 't_school',
+ 'verb': 'reading lore'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_mysticism">
         <h4>Mysticism</h4>
@@ -5730,6 +6035,16 @@
         <p>
           Requires: <a href="#skill_lore">Mage Lore</a> at least 8.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1},
+ 'desc': 'The ability to sense the flow and flux of arcane energies.',
+ 'id': 'mysticism',
+ 'mod': {'arcana.rate': 0.001, 'mana.max': 0.5, 'prismatic.rate': 0.02},
+ 'require': 'g.lore>=8',
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_necromancy">
@@ -5782,6 +6097,18 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 3},
+ 'desc': 'Forbidden death magic.',
+ 'id': 'necromancy',
+ 'mod': {'reanimation.rate': '2%', 'shadow.rate': 0.01},
+ 'require': 'g.evil>0&&g.reanimation>=7&&g.souls.max>3',
+ 'result': {'sp': 0.05},
+ 'run': {'shadow': 0.5, 'stamina': 0.4},
+ 'school': 'shadow'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_potions">
         <h4>Potions</h4>
@@ -5823,6 +6150,16 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'potions',
+ 'mod': {'alchemy.rate': '1%', 'research.max': 5},
+ 'need': ['workspace', 'potsource'],
+ 'require': 'g.crafting>=3&&g.alchemy>=2',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_reanimation">
@@ -5866,6 +6203,16 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'reanimation',
+ 'mod': {'allies.max': 0.2, 'necromancy.rate': '1%', 'shadow.rate': 0.01},
+ 'require': 'g.evil>0&&g.embalming>=3',
+ 'result': {'sp': 0.05},
+ 'run': {'shadow': 0.1, 'stamina': 0.5},
+ 'school': ['shadow']}</code></pre>
+        </details>
+
       </section>
       <section id="skill_scrying">
         <h4>Scrying</h4>
@@ -5873,6 +6220,15 @@
         <p>
           Requires: <a href="#skill_divination">Divination</a> more than 5.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'effect': {'arcana': 0.001},
+ 'id': 'scrying',
+ 'mod': {'arcana.max': 0.2, 'dist': '1%', 'mana.max': 0.2, 'research.max': 1},
+ 'require': 'g.divination>5',
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_trickery">
@@ -5926,6 +6282,20 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 2},
+ 'flavor': 'Sufficiently advanced sleight of hand is indistinguishable from '
+           'magic',
+ 'id': 'trickery',
+ 'mod': {'dodge': 0.4, 'luck': 0.4},
+ 'require': 'g.prestidigitation>25',
+ 'result': {'arcana': 0.1, 'sp': 0.15},
+ 'run': {'gold': 1, 'stamina': 0.2},
+ 'school': 'arcane',
+ 'verb': 'scheming'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_weaving">
         <h4>Weaving</h4>
@@ -5964,6 +6334,15 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'weaving',
+ 'mod': {'crafting.max': 0.2, 'crafting.rate': '0.1+1%'},
+ 'need': 'weavesource',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_history">
@@ -6016,6 +6395,22 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The knowledge of what has come before reveals what is yet possible.',
+ 'effect': {'research': 0.5},
+ 'id': 'history',
+ 'mod': {'arcana.max': 0.1,
+         'languages.rate': '1%',
+         'research.max': 15,
+         's_travel.max': 0.1},
+ 'name': 'world lore',
+ 'require': 'g.languages>=6',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.2},
+ 'verb': 'historicizing'}</code></pre>
+        </details>
+
       </section>
     </section>
     <section id="level_2_skills">
@@ -6028,6 +6423,19 @@
         <p>
           Needs: airsource.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The study of air',
+ 'id': 'airlore',
+ 'level': 2,
+ 'mod': {'air': {'max': 1, 'rate': 0.01}, 'research.max': 1},
+ 'name': 'aeromancy',
+ 'need': 'airsource',
+ 'run': {'stamina': 0.3},
+ 'tags': 'elemental,t_school',
+ 'verb': 'studying air'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_anatomy">
@@ -6071,6 +6479,18 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The study of physical form.',
+ 'id': 'anatomy',
+ 'level': 2,
+ 'mod': {'hp.max': 1, 'hp.rate': 0.1, 'research.max': 1},
+ 'require': 'g.neophyte>0&&g.lore>=6',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.5},
+ 'school': ['nature', 'shadow', 'light']}</code></pre>
+        </details>
+
       </section>
       <section id="skill_waterlore">
         <h4>Aquamancy</h4>
@@ -6080,6 +6500,19 @@
           Needs: watersource.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The study of water',
+ 'id': 'waterlore',
+ 'level': 2,
+ 'mod': {'research.max': 1, 'water': {'max': 1, 'rate': 0.01}},
+ 'name': 'aquamancy',
+ 'need': 'watersource',
+ 'run': {'stamina': 0.4},
+ 'tags': 'elemental,t_school',
+ 'verb': 'studying water'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_earthlore">
         <h4>Geomancy</h4>
@@ -6087,6 +6520,17 @@
         <p>
           Needs: earthsource.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'earthlore',
+ 'level': 2,
+ 'mod': {'earth': {'max': 1, 'rate': 0.01}, 'research.max': 1},
+ 'name': 'geomancy',
+ 'need': 'earthsource',
+ 'run': {'stamina': 0.4},
+ 'tags': 't_school,elemental'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_lightlore">
@@ -6099,6 +6543,20 @@
         </p>
         <p><em>The light fantastic</em></p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Study of pure light',
+ 'flavor': 'The light fantastic',
+ 'id': 'lightlore',
+ 'level': 2,
+ 'mod': {'light.max': 1, 'light.rate': 0.01, 'research.max': 1},
+ 'name': 'lumenology',
+ 'need': 'lightsource',
+ 'run': {'stamina': 0.4},
+ 'school': 'light',
+ 'tags': 't_school'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_naturelore">
         <h4>Nature Studies</h4>
@@ -6106,6 +6564,18 @@
         <p>
           Requires: <a href="#skill_herbalism">Herbalism</a> at least 3.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'naturelore',
+ 'level': 2,
+ 'mod': {'nature': {'max': 1, 'rate': 0.01}, 'research.max': 1},
+ 'name': 'nature studies',
+ 'require': 'g.herbalism>=3',
+ 'run': {'stamina': 0.4},
+ 'tags': 't_school',
+ 'verb': 'observing nature'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_firelore">
@@ -6116,6 +6586,19 @@
           Needs: firesource.
         </p>
         <p><em>Dry is good and wind is better</em></p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'The investigation of fire',
+ 'flavor': 'Dry is good and wind is better',
+ 'id': 'firelore',
+ 'level': 2,
+ 'mod': {'fire.max': 1, 'fire.rate': 0.01, 'research.max': 1},
+ 'name': 'pyromancy',
+ 'need': 'firesource',
+ 'run': {'hp': 0.2, 'stamina': 0.4},
+ 'tags': 't_school,elemental'}</code></pre>
+        </details>
 
       </section>
       <section id="skill_spiritlore">
@@ -6130,6 +6613,20 @@
           Requires: <a href="#skill_lore">Mage Lore</a> at least 6.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Seeing the unseen',
+ 'id': 'spiritlore',
+ 'level': 2,
+ 'mod': {'research.max': 1, 'spirit.max': 1, 'spirit.rate': 0.01},
+ 'name': 'spirit communion',
+ 'need': 'spiritsource',
+ 'require': 'g.lore>=6',
+ 'run': {'stamina': 0.4},
+ 'school': 'spirit',
+ 'tags': 't_school'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_s_travel">
         <h4>Travel</h4>
@@ -6138,6 +6635,18 @@
         <p>
           Requires: <a href="#skill_languages">Languages</a> or <a href="#skill_history">World Lore</a> at least 12.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Travel offers a growing wizard new avenues of research and new '
+         'sources of research.',
+ 'id': 's_travel',
+ 'level': 2,
+ 'mod': {'dist': '5%'},
+ 'name': 'travel',
+ 'require': '(g.languages+g.history)>=12',
+ 'run': {'stamina': 0.5}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_shadowlore">
@@ -6150,6 +6659,19 @@
         <p>
           Requires: <a href="#skill_dissection">Dissection</a> at least 3 or evil more than 0.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'shadowlore',
+ 'level': 2,
+ 'mod': {'research.max': 1, 'shadow.max': 1, 'shadow.rate': 0.01},
+ 'name': 'umbramancy',
+ 'need': 'shadowsource',
+ 'require': 'g.dissection>=3||g.evil>0',
+ 'run': {'stamina': 0.5},
+ 'school': 'shadow',
+ 'tags': 't_school'}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6195,6 +6717,16 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'id': 'charms',
+ 'level': 3,
+ 'mod': {'allies.max': 1, 'minions.max': '10%', 'research.max': 1},
+ 'require': 'g.enchanting>=5&&g.lore>=10',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.3}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_composure">
         <h4>Composure</h4>
@@ -6203,6 +6735,17 @@
         <p>
           Requires: <a href="#skill_concentrate">Concentration</a> at least 4.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': 'Remain unfazed under strain.',
+ 'id': 'composure',
+ 'level': 3,
+ 'mod': {'stress.rate': -0.1},
+ 'name': 'composure',
+ 'require': 'g.concentrate>=4',
+ 'run': {'stamina': 0.3}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_geosculpting">
@@ -6253,6 +6796,20 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 2},
+ 'desc': 'Bend the earth to your will.',
+ 'id': 'geosculpting',
+ 'level': 3,
+ 'mod': {'earthspire.mod.space.max': 1,
+         'player.defense': 1,
+         'player.dodge': -1},
+ 'require': 'g.geomancer>0||g.earthshaker>0',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.6}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_hammerlore">
@@ -6306,6 +6863,20 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 2},
+ 'desc': 'The anvil or the skull, it makes no difference.',
+ 'id': 'hammerlore',
+ 'level': 3,
+ 'mod': {'player.bonuses.blunt': 1, 'player.hits.blunt': 1},
+ 'name': 'hammer proficiency',
+ 'need': 'armssource',
+ 'require': 'g.geomancer>0||g.earthshaker>0||g.titan>0',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.6}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_magicbeasts">
         <h4>Magic Beasts</h4>
@@ -6354,6 +6925,19 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': '',
+ 'effect': {'naturelore.exp': 1},
+ 'id': 'magicbeasts',
+ 'level': 3,
+ 'mod': {'allies.max': 0.25, 'animals.rate': '1%', 'research.max': 5},
+ 'name': 'magic beasts',
+ 'require': 'g.animals>=7&&g.naturelore>=5',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.7}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_bladelore">
@@ -6409,6 +6993,23 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 2},
+ 'desc': 'Incorporate martial weapons into your magic.',
+ 'id': 'bladelore',
+ 'level': 3,
+ 'mod': {'player.bonuses.pierce': 1,
+         'player.bonuses.slash': 1,
+         'player.hits.pierce': 1,
+         'player.hits.slash': 1},
+ 'name': 'swordplay',
+ 'need': 'armssource',
+ 'require': 'g.spellblade>0||g.battlemage>0||g.dreadlord>0',
+ 'result': {'sp': 0.05},
+ 'run': {'stamina': 0.6}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_vivification">
         <h4>Vivification</h4>
@@ -6447,6 +7048,17 @@
           </table>
 
         </div>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': '',
+ 'id': 'vivification',
+ 'level': 3,
+ 'mod': {'anatomy.rate': '2%', 'stamina.rate': 0.1},
+ 'require': 'g.tier4>0&&g.anatomy>0&&g.spiritlore>=5',
+ 'result': {'sp': 0.01},
+ 'run': {'stamina': 1}}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6503,6 +7115,17 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'sp': 2},
+ 'id': 'demonology',
+ 'level': 4,
+ 'mod': {'arcana.max': 0.1, 'lore.rate': 0.2, 'research.max': 3},
+ 'require': 'tier1',
+ 'result': {'sp': 0.1},
+ 'run': {'hp': 1, 'stamina': 0.4}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_summoning">
         <h4>Summoning</h4>
@@ -6511,6 +7134,17 @@
         <p>
           Requires: <a href="#tier_1">Tier 1</a>, <a href="#skill_conjuration">Conjuration</a> at least 5.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 2},
+ 'id': 'summoning',
+ 'level': 4,
+ 'mod': {'allies.max': 1, 'minions.max': 0.5, 'research.max': 5},
+ 'require': 'g.tier1>0&&g.conjuration>=5',
+ 'run': {'stamina': 0.7},
+ 'school': 'arcane'}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6525,6 +7159,18 @@
           Requires: <a href="#class_bloodmage">Blood Mage</a> or <a href="#class_thanophage">Thanophage</a> or <a href="#class_alchemist">Alchemist</a> more than 0.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 3},
+ 'id': 'bloodlore',
+ 'level': 5,
+ 'mod': {'anatomy.rate': '1%', 'hp.max': 10, 'hp.rate': 0.1},
+ 'name': 'blood magic',
+ 'require': '(g.bloodmage+g.thanophage+g.alchemist)>0',
+ 'run': {'hp': 1, 'stamina': 1},
+ 'school': 'blood'}</code></pre>
+        </details>
+
       </section>
       <section id="skill_wizlore">
         <h4>Wizard Lore</h4>
@@ -6534,6 +7180,21 @@
         <p>
           Requires: <a href="#class_mage">Mage</a> or <a href="#class_highmage">High Mage</a> or <a href="#class_wizard">Wizard</a> or <a href="#class_wizard2">Dhrunic Wizard</a> or <a href="#class_wizard3">Mythic Wizard</a> at least 2.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'desc': "Many ask 'how?' Few think to ask, 'why?'",
+ 'id': 'wizlore',
+ 'level': 5,
+ 'mod': {'arcana.rate': '1%',
+         'lore.rate': '5%',
+         'mana.rate': '3%',
+         'research.rate': '2%'},
+ 'name': 'wizard Lore',
+ 'require': '(g.mage+g.highmage+g.wizard+g.wizard2+g.wizard3)>=2',
+ 'run': {'arcana': 0.5, 'research': 50, 'stamina': 1},
+ 'school': 'arcane'}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6548,6 +7209,19 @@
           Requires: <a href="#skill_astronomy">Astronomy</a> at least 5, <a href="#tier_1">Tier 1</a>.
         </p>
         <p><em>There is no safe distance</em></p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 5, 'sp': 2},
+ 'desc': 'Farther than the stars and closer than your fingertips',
+ 'flavor': 'There is no safe distance',
+ 'id': 'planeslore',
+ 'level': 6,
+ 'mod': {'arcana.max': 1, 'dist': '1%', 'research.max': 1},
+ 'name': 'planes lore',
+ 'require': 'g.astronomy>=5&&g.tier1>0',
+ 'run': {'mana': 0.1, 'research': 1, 'stamina': 0.7}}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6608,6 +7282,27 @@
 
         </div>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'alias': 'runes',
+ 'buy': {'sp': 3},
+ 'desc': 'Study ancient Dhrunic runes.',
+ 'flavor': '',
+ 'id': 'runelore',
+ 'level': 7,
+ 'mod': {'languages.max': 0.2,
+         'languages.rate': '0.1+2%',
+         'lore.max': 0.2,
+         'lore.rate': 0.1,
+         'research.max': 5},
+ 'name': 'runic lore',
+ 'require': 'g.tier2>0&&g.dwarfbook>0',
+ 'result': {'arcana': 0.1, 'sp': 0.05},
+ 'run': {'research': 1, 'stamina': 0.2},
+ 'school': 'arcane',
+ 'verb': 'translating'}</code></pre>
+        </details>
+
       </section>
     </section>
     <section id="level_8_skills">
@@ -6621,6 +7316,20 @@
         <p>
           Requires: <a href="#tier_2">Tier 2</a>, <a href="#skill_lore">Mage Lore</a> at least 15.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 5},
+ 'desc': 'The ability to build greater spells from lesser is what separates a '
+         'practitioner from a master.',
+ 'id': 'spellcraft',
+ 'level': 8,
+ 'mod': {'research.max': 5, 'scraft': 1, 'userSpells.max': 0.7},
+ 'require': 'g.tier2>0&&g.lore>=15',
+ 'run': {'research': 5, 'stamina': 0.2},
+ 'school': 'arcane',
+ 'verb': 'studying spells'}</code></pre>
+        </details>
 
       </section>
     </section>
@@ -6639,6 +7348,20 @@
         </p>
         <p><em>Too much to do, so little time.</em></p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'sp': 5},
+ 'desc': 'There must be a way...',
+ 'flavor': 'Too much to do, so little time.',
+ 'id': 'chronomancy',
+ 'level': 9,
+ 'mod': {'tempus.max': 1, 'tempus.rate': 0.001},
+ 'need': 'timesource',
+ 'require': 'tier3',
+ 'run': {'mana': 1, 'research': 1, 'stamina': 0.3},
+ 'tags': 't_school'}</code></pre>
+        </details>
+
       </section>
     </section>
     <section id="level_10_skills">
@@ -6653,6 +7376,19 @@
         </p>
         <p><em>What could go wrong?</em></p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 5, 'sp': 5},
+ 'desc': 'The absence of all things',
+ 'flavor': 'What could go wrong?',
+ 'id': 'voidlore',
+ 'level': 10,
+ 'mod': {'dist': '1%', 'research.max': 1, 'space.max': '2%'},
+ 'name': 'abyss gazing',
+ 'require': 'g.planeslore>=10&&g.tier5>0',
+ 'run': {'arcana': 0.1, 'research': 5, 'stamina': 0.7}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_airlore2">
         <h4>Air Mastery</h4>
@@ -6661,6 +7397,22 @@
         <p>
           Requires: <a href="#skill_airlore">Aeromancy</a> at least 10.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of air',
+ 'id': 'airlore2',
+ 'level': 10,
+ 'mod': {'air.max': 1,
+         'air.rate': '1%',
+         'airrune.max': 2,
+         'player.bonuses.air': 1,
+         'player.hits.air': 1},
+ 'name': 'air mastery',
+ 'require': 'g.airlore>=10',
+ 'run': {'air': 0.5, 'stamina': 1}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_manalore2">
@@ -6671,6 +7423,21 @@
           Requires: <a href="#skill_lore">Mage Lore</a> at least 20.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of pure magic',
+ 'id': 'manalore2',
+ 'level': 10,
+ 'mod': {'mana.max': 1,
+         'mana.rate': '1%',
+         'player.bonuses.mana': 1,
+         'player.hits.mana': 1},
+ 'name': 'arcane mastery',
+ 'require': 'g.lore>=20',
+ 'run': {'mana': 0.5, 'stamina': 1}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_astrallore">
         <h4>Astral Communion</h4>
@@ -6680,6 +7447,18 @@
           Requires: <a href="#skill_planeslore">Planes Lore</a> at least 25, <a href="#tier_5">Tier 5</a>.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'sp': 10},
+ 'desc': 'Anyone can see the stars. Few can read them.',
+ 'id': 'astrallore',
+ 'level': 10,
+ 'mod': {'sindel.max': 0.4, 'sindel.rate': 0.0001},
+ 'name': 'astral communion',
+ 'require': 'g.planeslore>=25&&g.tier5>0',
+ 'run': {'arcana': 5, 'research': 10, 'stamina': 1}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_earthlore2">
         <h4>Earth Mastery</h4>
@@ -6688,6 +7467,22 @@
         <p>
           Requires: <a href="#skill_earthlore">Geomancy</a> at least 10.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of earth',
+ 'id': 'earthlore2',
+ 'level': 10,
+ 'mod': {'earth.max': 1,
+         'earth.rate': '1%',
+         'earthrune.max': 2,
+         'player.bonuses.earth': 1,
+         'player.hits.earth': 1},
+ 'name': 'earth mastery',
+ 'require': 'g.earthlore>=10',
+ 'run': {'earth': 0.5, 'stamina': 1}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_firelore2">
@@ -6699,6 +7494,23 @@
         </p>
         <p><em>Dry is good and wind is better</em></p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of fire',
+ 'flavor': 'Dry is good and wind is better',
+ 'id': 'firelore2',
+ 'level': 10,
+ 'mod': {'fire.max': 1,
+         'fire.rate': '1%',
+         'firerune.max': 2,
+         'player.bonuses.fire': 1,
+         'player.hits.fire': 1},
+ 'name': 'fire mastery',
+ 'require': 'g.firelore>=10',
+ 'run': {'fire': 0.5, 'stamina': 1}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_lightlore2">
         <h4>Light Mastery</h4>
@@ -6707,6 +7519,21 @@
         <p>
           Requires: <a href="#skill_lightlore">Lumenology</a> at least 10.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of light',
+ 'id': 'lightlore2',
+ 'level': 10,
+ 'mod': {'light.max': 1,
+         'light.rate': '1%',
+         'player.bonuses.light': 1,
+         'player.hits.light': 1},
+ 'name': 'light mastery',
+ 'require': 'g.lightlore>=10',
+ 'run': {'light': 0.5, 'stamina': 1}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_naturelore2">
@@ -6717,6 +7544,21 @@
           Requires: <a href="#skill_naturelore">Nature Studies</a> at least 10.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of nature',
+ 'id': 'naturelore2',
+ 'level': 10,
+ 'mod': {'nature.max': 1,
+         'nature.rate': '1%',
+         'player.bonuses.nature': 1,
+         'player.hits.nature': 1},
+ 'name': 'nature mastery',
+ 'require': 'g.naturelore>=10',
+ 'run': {'nature': 0.5, 'stamina': 1}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_shadowlore2">
         <h4>Shadow Mastery</h4>
@@ -6725,6 +7567,21 @@
         <p>
           Requires: <a href="#skill_shadowlore">Umbramancy</a> at least 10.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of shadow',
+ 'id': 'shadowlore2',
+ 'level': 10,
+ 'mod': {'player.bonuses.shadow': 1,
+         'player.hits.shadow': 1,
+         'shadow.max': 1,
+         'shadow.rate': '1%'},
+ 'name': 'shadow mastery',
+ 'require': 'g.shadowlore>=10',
+ 'run': {'shadow': 0.5, 'stamina': 1}}</code></pre>
+        </details>
 
       </section>
       <section id="skill_spiritlore2">
@@ -6735,6 +7592,21 @@
           Requires: <a href="#skill_spiritlore">Spirit Communion</a> at least 10.
         </p>
 
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'souls': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of spirit',
+ 'id': 'spiritlore2',
+ 'level': 10,
+ 'mod': {'player.bonuses.spirit': 1,
+         'player.hits.spirit': 1,
+         'spirit.max': 1,
+         'spirit.rate': '1%'},
+ 'name': 'spirit mastery',
+ 'require': 'g.spiritlore>=10',
+ 'run': {'spirit': 0.5, 'stamina': 1}}</code></pre>
+        </details>
+
       </section>
       <section id="skill_waterlore2">
         <h4>Water Mastery</h4>
@@ -6743,6 +7615,22 @@
         <p>
           Requires: <a href="#skill_waterlore">Aquamancy</a> at least 10.
         </p>
+
+        <details>
+          <summary>Raw</summary>
+          <pre><code>{'buy': {'arcana': 1, 'runestones': 10, 'sp': 5, 'tomes': 30},
+ 'desc': 'A mastery of water',
+ 'id': 'waterlore2',
+ 'level': 10,
+ 'mod': {'player.bonuses.water': 1,
+         'player.hits.water': 1,
+         'water.max': 1,
+         'water.rate': '1%',
+         'waterrune.max': 2},
+ 'name': 'water mastery',
+ 'require': 'g.waterlore>=10',
+ 'run': {'stamina': 1, 'water': 0.5}}</code></pre>
+        </details>
 
       </section>
     </section>
