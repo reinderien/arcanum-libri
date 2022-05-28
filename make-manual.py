@@ -412,6 +412,8 @@ class Database(NamedTuple):
 
     @staticmethod
     def _get_branch() -> str:
+        subprocess.run(('git', '--version'))
+
         output = subprocess.run(
             ('git', 'branch', '--show-current'),
             cwd=DATA_ROOT, shell=True, text=True, check=False,
