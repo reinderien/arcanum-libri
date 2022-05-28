@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import shutil
 import subprocess
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
@@ -412,20 +413,12 @@ class Database(NamedTuple):
 
     @staticmethod
     def _get_branch() -> str:
-        subprocess.run(('git', '--version'))
-
-        output = subprocess.run(
-            ('git', 'branch', '--show-current'),
-            cwd=DATA_ROOT, shell=True, text=True, check=False,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        cmd = shutil.which('git')
+        output = subprocess.check_output(
+            (cmd, 'branch', '--show-current'),
+            cwd=DATA_ROOT, shell=False, text=True,
         )
-        try:
-            output.check_returncode()
-        except subprocess.CalledProcessError:
-            print(output.stdout)
-            print(output.stderr)
-            raise
-        return output.stdout.rstrip()
+        return output.rstrip()
 
 
 def render(db: Database) -> None:
