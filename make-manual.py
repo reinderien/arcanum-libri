@@ -414,9 +414,15 @@ class Database(NamedTuple):
     def _get_branch() -> str:
         output = subprocess.run(
             ('git', 'branch', '--show-current'),
-            cwd=DATA_ROOT, shell=True, text=True, check=True,
+            cwd=DATA_ROOT, shell=True, text=True, check=False,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         )
+        try:
+            output.check_returncode()
+        except subprocess.CalledProcessError:
+            print(output.stdout)
+            print(output.stderr)
+            raise
         return output.stdout.rstrip()
 
 
