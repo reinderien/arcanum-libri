@@ -209,8 +209,28 @@ class MutatedNode:
             )
 
 
+class HasRequirements:
+    require: Optional[str] = None
+    need: Optional[str] = None
+
+    @staticmethod
+    def describe_requirements(source: Union[str, Iterable[str]], index: dict[str, Any]) -> Iterable[str]:
+        if isinstance(source, str):
+            source = (source,)
+        for line in source:
+            tree = parser.parse(line)
+            mutated = MutatedNode(tree).transform()
+            yield from mutated.describe(index)
+
+    def friendly_require(self, index: dict[str, Any]) -> Iterable[str]:
+        return self.describe_requirements(self.require, index)
+
+    def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
+        return self.describe_requirements(self.need, index)
+
+
 @dataclass(frozen=True)
-class Class:
+class Class(HasRequirements):
     id: str
     raw: dict
     actdesc: Optional[str] = None
@@ -272,18 +292,6 @@ class Class:
             return self.disable,
         return tuple(self.disable)
 
-    @staticmethod
-    def describe_requirements(source: str, index: dict[str, Any]) -> Iterable[str]:
-        tree = parser.parse(source)
-        mutated = MutatedNode(tree).transform()
-        return mutated.describe(index)
-
-    def friendly_require(self, index: dict[str, Any]) -> Iterable[str]:
-        return self.describe_requirements(self.require, index)
-
-    def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
-        return self.describe_requirements(self.need, index)
-
     def sort_key(self) -> str:
         return self.friendly_name
 
@@ -322,7 +330,7 @@ class Event:
 
 
 @dataclass(frozen=True)
-class Skill:
+class Skill(HasRequirements):
     id: str
     run: dict[str, float]
     mod: dict[str, float]

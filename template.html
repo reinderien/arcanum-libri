@@ -246,6 +246,28 @@
       <section id="{{skill.permalink}}">
         <h4>{{skill.friendly_name}}</h4>
 
+        {% if skill.desc %}
+        <p>{{skill.desc}}</p>
+        {% endif %}
+        {% if skill.school %}
+        <p>School: {{skill.school}}.</p>
+        {% endif %}
+        {{- macros.require_fragments(skill.need,    skill.friendly_need,    'Needs') }}
+        {{- macros.require_fragments(skill.require, skill.friendly_require, 'Requires') }}
+        {%- if skill.flavor %}
+        <p><em>{{skill.flavor}}</em></p>
+        {% endif %}
+        {% if skill.cost or skill.modifier_map or skill.result %}
+
+        <div class="stats">
+          {{- macros.stats_table(skill.buy, 'Cost') }}
+          {{- macros.stats_table(skill.run, 'Run') }}
+          {{- macros.stats_table(skill.mod, 'Modifiers') }}
+          {{- macros.stats_table(skill.effect, 'Effect') }}
+          {{- macros.stats_table(skill.result, 'Result') }}
+        </div>
+        {% endif %}
+
       </section>
       {% endfor %}
     </section>
