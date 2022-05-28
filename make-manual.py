@@ -75,7 +75,7 @@ class Tier:
 
     @property
     def permalink(self) -> str:
-        return f'class_tier_{self.sequence}'
+        return f'tier_{self.sequence}'
 
 
 class MutatedNode:
@@ -219,7 +219,7 @@ class Class:
     result: Optional[dict[str, int]] = None
     log: Optional[dict[str, str]] = None
     warn: Optional[bool] = None
-    disable: Optional[list[str]] = None
+    disable: Union[NoneType, str, list[str]] = None
     desc: Optional[str] = None
     actname: Optional[str] = None
     buyname: Optional[str] = None
@@ -229,7 +229,7 @@ class Class:
     flavor: Optional[str] = None
     name: Optional[str] = None
     tags: Optional[str] = None
-    mod: Union[str, NoneType, dict[str, Union[bool, float]]] = None
+    mod: Union[NoneType, str, dict[str, Union[bool, float]]] = None
     max: Optional[int] = None
 
     @property
@@ -321,6 +321,27 @@ class Event:
         return results
 
 
+@dataclass(frozen=True)
+class Skill:
+    id: str
+    run: dict[str, float]
+    mod: dict[str, float]
+    need: Optional[Union[str, list[str]]] = None
+    desc: Optional[str] = None
+    buy: Optional[dict[str, float]] = None
+    result: Optional[dict[str, float]] = None
+    name: Optional[str] = None
+    school: Optional[Union[str, list[str]]] = None
+    tags: Optional[str] = None
+    verb: Optional[str] = None
+    locked: Optional[bool] = None
+    require: Optional[str] = None
+    level: Optional[int] = None
+    flavor: Optional[str] = None
+    alias: Optional[str] = None
+    effect: Optional[dict[str, float]] = None
+
+
 class Database(NamedTuple):
     package: dict[str, Any]
     branch: str
@@ -337,6 +358,19 @@ class Database(NamedTuple):
             return json.load(f)
 
     @classmethod
+    def _inspect_file(cls, filename: str) -> dict[set[type]]:
+        fields = defaultdict(set)
+        data = cls._load_json(filename)
+        for entry in data:
+            for name, value in entry.items():
+                fields[name].add(type(value))
+        for entry in data:
+            for name, types in fields.items():
+                if name not in entry:
+                    types.add(NoneType)
+        return fields
+
+    @classmethod
     def from_json(cls) -> 'Database':
         package = cls._load_json('package')
         print(f'Loaded data for {package["name"]} {package["version"]}')
@@ -348,7 +382,7 @@ class Database(NamedTuple):
                 *cls._load_json('data/hall')['data']['classes']
             )
         }
-        events = {e['id']: Event(**e) for e in cls._load_json('data/events')}
+        events = {(e := Event(**data)).id: e for data in cls._load_json('data/events')}
         tiers = OrderedDict(
             (t.id, t) for t in sorted(
                 Tier.from_events(events),
@@ -360,6 +394,8 @@ class Database(NamedTuple):
             for tier in tiers.values()
             if (ttag := tier.tag) is not None
         }
+
+        skills = {(s := Skill(**data)).id: s for data in cls._load_json('data/skills')}
 
         index = (
             tiers
