@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import json
+import subprocess
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
-from subprocess import check_output
 from types import NoneType
 from typing import Any, Iterable, Iterator, Optional, Union, NamedTuple
 
@@ -412,11 +412,12 @@ class Database(NamedTuple):
 
     @staticmethod
     def _get_branch() -> str:
-        output = check_output(
+        output = subprocess.run(
             ('git', 'branch', '--show-current'),
-            cwd=DATA_ROOT, shell=True, text=True,
+            cwd=DATA_ROOT, shell=True, text=True, check=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         )
-        return output.rstrip()
+        return output.stdout.rstrip()
 
 
 def render(db: Database) -> None:
