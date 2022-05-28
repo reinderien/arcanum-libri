@@ -55,10 +55,19 @@
     <li><a href="#methods">Breviarium</a></li>
 
     <li>
-      <a href="#classes">Classes</a>
+      <a href="#tiers">Tiers</a>
       <ol type="i">
         {% for tier in tiers_by_id.values() %}
         <li><a href="#{{tier.permalink}}">{{tier.title}}</a></li>
+        {% endfor %}
+      </ol>
+    </li>
+
+    <li>
+      <a href="#classes">Classes</a>
+      <ol type="i" class="toc-columns">
+        {% for class_ in classes_by_name %}
+        <li><a href="#{{class_.permalink}}">{{class_.friendly_name}}</a></li>
         {% endfor %}
       </ol>
     </li>
@@ -93,8 +102,8 @@
     </p>
   </section>
 
-  <section id="classes">
-    <h2>Ⅱ. Classes</h2>
+  <section id="tiers">
+    <h2>Ⅱ. Tiers</h2>
     {% for tier in tiers_by_id.values()  %}
     {% set classes = classes_by_tier.get(tier.id, ()) %}
 
@@ -132,69 +141,71 @@
       {% endif %}
       {% endif %}
 
-      {% if len(classes) > 1 %}
       <h4>Classes</h4>
       <nav class="toc-columns">
         {% for class_ in classes %}
         <a href="#{{class_.permalink}}">{{class_.friendly_name}}</a>
         {% endfor %}
       </nav>
+    </section>
+    {% endfor %}
+  </section>
+
+  <section id="classes">
+    <h2>Ⅲ. Classes</h2>
+    {% for class_ in classes_by_name %}
+
+    <section id="{{class_.permalink}}">
+      <h4>
+        {{class_.friendly_name}}
+        {% if class_.secret %}
+        (<em>secret</em>)
+        {% endif %}
+      </h4>
+      {% if class_.buyname or class_.actdesc %}
+      <p>&rightarrow; {{class_.buyname or ''}} {{class_.actdesc or ''}}</p>
       {% endif %}
-      {% for class_ in classes %}
+      {% if class_.desc %}
+      <p>{{class_.desc}}</p>
+      {% endif %}
+      {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
+      {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
+      {%- if class_.id in class_deps %}
+      <p>
+        Unlocks:
+        {% for dep in class_deps[class_.id] %}
+        <a href="#{{dep.permalink}}">{{dep.friendly_name}}</a>
+        {%- if loop.last %}.{% else %}, {% endif %}
 
-      <section id="{{class_.permalink}}">
-        <h4>
-          {{class_.friendly_name}}
-          {% if class_.secret %}
-          (<em>secret</em>)
-          {% endif %}
-        </h4>
-        {% if class_.buyname or class_.actdesc %}
-        <p>&rightarrow; {{class_.buyname or ''}} {{class_.actdesc or ''}}</p>
-        {% endif %}
-        {% if class_.desc %}
-        <p>{{class_.desc}}</p>
-        {% endif %}
-        {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
-        {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
-        {%- if class_.id in class_deps %}
-        <p>
-          Unlocks:
-          {% for dep in class_deps[class_.id] %}
-          <a href="#{{dep.permalink}}">{{dep.friendly_name}}</a>
-          {%- if loop.last %}.{% else %}, {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
+      {% if class_.flavor %}
+      <p><em>{{class_.flavor}}</em></p>
+      {% endif %}
+      {% if class_.cost or class_.modifier_map or class_.result %}
 
-          {% endfor %}
-        </p>
-        {% endif %}
-        {% if class_.flavor %}
-        <p><em>{{class_.flavor}}</em></p>
-        {% endif %}
-        {% if class_.cost or class_.modifier_map or class_.result %}
+      <div class="stats">
+        {{- macros.stats_table(class_.cost, 'Cost') }}
+        {{- macros.stats_table(class_.modifier_map, 'Modifiers') }}
+        {{- macros.stats_table(class_.result, 'Result') }}
+      </div>
+      {% endif %}
+      {% if class_.disabled_actions %}
 
-        <div class="stats">
-          {{- macros.stats_table(class_.cost, 'Cost') }}
-          {{- macros.stats_table(class_.modifier_map, 'Modifiers') }}
-          {{- macros.stats_table(class_.result, 'Result') }}
-        </div>
-        {% endif %}
-        {% if class_.disabled_actions %}
+      <p>Disables: {{class_.disabled_actions|join(", ")}}.</p>
+      {% endif %}
 
-        <p>Disables: {{class_.disabled_actions|join(", ")}}.</p>
-        {% endif %}
-
-        <details>
-          <summary>Raw</summary>
-          <pre><code>{{class_.formatted_raw}}</code></pre>
-        </details>
-      </section>
-      {% endfor %}
+      <details>
+        <summary>Raw</summary>
+        <pre><code>{{class_.formatted_raw}}</code></pre>
+      </details>
     </section>
     {% endfor %}
   </section>
 
   <section id="skills">
-    <h2>Ⅲ. Skills</h2>
+    <h2>Ⅳ. Skills</h2>
 
   </section>
 </main>

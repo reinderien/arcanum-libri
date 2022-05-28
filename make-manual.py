@@ -326,6 +326,7 @@ class Database(NamedTuple):
     tiers_by_id: dict[str, Tier]
     classes_by_id: dict[str, Class]
     classes_by_tier: dict[str, Class]
+    classes_by_name: list[Class]
     class_deps: dict[str, list[Class]]
     index: dict[str, Union[Tier, Class]]
 
@@ -371,6 +372,7 @@ class Database(NamedTuple):
             tiers_by_id=tiers,
             classes_by_id=classes,
             classes_by_tier=cls._group_classes(tiers, classes.values()),
+            classes_by_name=sorted(classes.values(), key=Class.sort_key),
             class_deps=cls._load_class_reverse_deps(classes),
             index=index,
         )
