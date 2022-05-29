@@ -30,3 +30,17 @@
           </table>
 {% endif %}
 {% endmacro %}
+
+{% macro reverse_deps(self, deps) %}
+{% set deps_for_us = deps.get(self.id) %}
+{% if deps_for_us %}
+        <p>
+          Unlocks:
+          {% for dep in deps_for_us %}
+          <a href="#{{dep.permalink}}">{{dep.friendly_name}}</a>
+          {%- if loop.last %}.{% else %}, {% endif %}
+
+          {% endfor %}
+        </p>
+{% endif %}
+{% endmacro %}

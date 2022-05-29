@@ -9,7 +9,7 @@ from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Any, Collection, Iterable, Iterator, NamedTuple, Optional, Union
+from typing import Any, Collection, Iterable, Iterator, NamedTuple, Optional, Type, Union
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -115,6 +115,12 @@ class Tier:
             classes_by_tier.items(),
             key=sort_key,
         ))
+
+    @property
+    def positive_requirements(self) -> Iterable[str]:
+        if self.event:
+            return self.event.positive_requirements
+        return ()
 
 
 class MutatedNode:
@@ -252,6 +258,17 @@ class HasRequirements:
     require: Optional[str] = None
     need: Optional[str] = None
 
+    @property
+    def positive_requirements(self) -> Iterator[str]:
+        for source in (self.need, self.require):
+            if source:
+                if isinstance(source, str):
+                    source = (source,)
+                for line in source:
+                    tree = parser.parse(line)
+                    mutated = MutatedNode(tree).transform()
+                    yield from mutated.requirements()
+
     @staticmethod
     def describe_requirements(source: Union[str, Iterable[str]], index: dict[str, Any]) -> Iterable[str]:
         if isinstance(source, str):
@@ -266,6 +283,35 @@ class HasRequirements:
 
     def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
         return self.describe_requirements(self.need, index)
+
+    @staticmethod
+    def load_reverse_deps(index: dict[str, 'HasRequirements']) -> dict[str, list['HasRequirements']]:
+        requirements = defaultdict(list)
+        for dependent_obj in index.values():
+            reqs = getattr(dependent_obj, 'positive_requirements', ())
+            for required_name in reqs:
+                requirements[required_name].append(dependent_obj)
+
+        return requirements
+
+    @staticmethod
+    def reverse_deps_for_type(
+        type_: Type,
+        index: dict[str, Any],
+        deps: dict[str, list['HasRequirements']],
+    ) -> Iterator[tuple[str, 'HasRequirements']]:
+        for name, dep_group in deps.items():
+            required_obj = index.get(name)
+            if isinstance(required_obj, type_):
+                yield name, dep_group
+
+    @classmethod
+    def reverse_deps(
+        cls,
+        index: dict[str, Any],
+        deps: dict[str, list['HasRequirements']],
+    ) -> Iterator[tuple[str, 'HasRequirements']]:
+        return cls.reverse_deps_for_type(cls, index, deps)
 
 
 class HasRaw:
@@ -298,6 +344,12 @@ class Class(HasRaw, HasRequirements):
     tags: Optional[str] = None
     mod: Union[NoneType, str, dict[str, Union[bool, float]]] = None
     max: Optional[int] = None
+
+    def __str__(self) -> str:
+        return self.friendly_name
+
+    def __repr__(self) -> str:
+        return self.friendly_name
 
     @property
     def friendly_name(self) -> str:
@@ -339,27 +391,8 @@ class Class(HasRaw, HasRequirements):
         return self.friendly_name
 
     @property
-    def positive_requirements(self) -> Iterator[str]:
-        for source in (self.need, self.require):
-            if source:
-                tree = parser.parse(source)
-                mutated = MutatedNode(tree).transform()
-                yield from mutated.requirements()
-
-    @property
     def permalink(self) -> str:
         return f'class_{self.id}'
-
-    @staticmethod
-    def load_reverse_deps(classes: dict[str, 'Class']) -> dict[str, list['Class']]:
-        requirements = defaultdict(list)
-        for dependent_class in classes.values():
-            for required_name in dependent_class.positive_requirements:
-                depended_class = classes.get(required_name)
-                if depended_class is not None:
-                    requirements[required_name].append(dependent_class)
-
-        return requirements
 
     @classmethod
     def load_by_id(cls, *args: Iterable[dict[str, Any]]) -> Iterator[tuple[str, 'Class']]:
@@ -416,6 +449,12 @@ class Skill(HasRaw, HasRequirements):
     alias: Optional[str] = None
     effect: Optional[dict[str, float]] = None
 
+    def __str__(self) -> str:
+        return self.friendly_name
+
+    def __repr__(self) -> str:
+        return self.friendly_name
+
     @property
     def friendly_name(self) -> str:
         return (self.name or self.id).title()
@@ -456,6 +495,12 @@ class SkillRef:
     id: str
     suffix: str
 
+    def __str__(self) -> str:
+        return self.friendly_name
+
+    def __repr__(self) -> str:
+        return self.friendly_name
+
     @property
     def permalink(self) -> str:
         return self.skill.permalink
@@ -479,7 +524,9 @@ class Database(NamedTuple):
     classes_by_id: dict[str, Class]
     classes_by_tier: dict[str, Class]
     classes_by_name: list[Class]
+    tier_deps: dict[str, list[Tier]]
     class_deps: dict[str, list[Class]]
+    skill_deps: dict[str, list[Skill]]
     skills_by_level: dict[int, list[Skill]]
     index: dict[str, Union[Tier, Class]]
 
@@ -527,6 +574,11 @@ class Database(NamedTuple):
             | skill_refs
         )
 
+        reverse_deps = HasRequirements.load_reverse_deps(index)
+        tier_deps = dict(HasRequirements.reverse_deps_for_type(Tier, index, reverse_deps))
+        class_deps = dict(Class.reverse_deps(index, reverse_deps))
+        skill_deps = dict(Skill.reverse_deps(index, reverse_deps))
+
         return cls(
             package=package,
             branch=cls._get_branch(),
@@ -534,7 +586,7 @@ class Database(NamedTuple):
             classes_by_id=classes_by_id,
             classes_by_tier=Tier.group_classes(tiers, classes_by_id.values()),
             classes_by_name=sorted(classes_by_id.values(), key=Class.sort_key),
-            class_deps=Class.load_reverse_deps(classes_by_id),
+            tier_deps=tier_deps, class_deps=class_deps, skill_deps=skill_deps,
             skills_by_level=skills_by_level,
             index=index,
         )
