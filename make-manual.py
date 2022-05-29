@@ -9,7 +9,7 @@ from decimal import Decimal
 from pathlib import Path
 from pprint import pformat
 from types import NoneType
-from typing import Any, Iterable, Iterator, Optional, Union, NamedTuple, Collection
+from typing import Any, Collection, Iterable, Iterator, NamedTuple, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -64,6 +64,21 @@ class Tier:
         for event in events.values():
             if event.id.startswith('tier'):
                 yield cls.from_tier_event(event)
+
+    @classmethod
+    def load_by_id(cls, events: dict[str, 'Event']) -> Iterator[tuple[str, 'Tier']]:
+        for tier in sorted(
+            cls.from_events(events),
+            key=cls.sort_key,
+        ):
+            yield tier.id, tier
+
+    @classmethod
+    def load_by_tag(cls, tiers: Iterable['Tier']) -> Iterator[tuple[str, 'Tier']]:
+        for tier in tiers:
+            ttag = tier.tag
+            if ttag is not None:
+                yield ttag, tier
 
     @property
     def tag(self) -> Optional[str]:
@@ -344,6 +359,12 @@ class Class(HasRaw, HasRequirements):
 
         return requirements
 
+    @classmethod
+    def load_by_id(cls, *args: Iterable[dict[str, Any]]) -> Iterator[tuple[str, 'Class']]:
+        for source in args:
+            for data in source:
+                yield data['id'], cls(raw=data, **data)
+
 
 @dataclass(frozen=True)
 class Event(HasRaw, HasRequirements):
@@ -365,6 +386,11 @@ class Event(HasRaw, HasRequirements):
         for lock in locks:
             results.append(index[lock])
         return results
+
+    @classmethod
+    def load_by_id(cls, source: Iterable[dict[str, Any]]) -> Iterator[tuple[str, 'Event']]:
+        for data in source:
+            yield data['id'], cls(raw=data, **data)
 
 
 @dataclass(frozen=True)
@@ -422,6 +448,27 @@ class Skill(HasRaw, HasRequirements):
         return by_id, ordered_by_level
 
 
+@dataclass(frozen=True)
+class SkillRef:
+    skill: Skill
+    id: str
+    suffix: str
+
+    @property
+    def permalink(self) -> str:
+        return self.skill.permalink
+
+    @property
+    def friendly_name(self) -> str:
+        return f'{self.skill.friendly_name} ({self.suffix})'
+
+    @classmethod
+    def from_skills(cls, skills: Iterable[Skill]) -> Iterator['SkillRef']:
+        for skill in skills:
+            yield cls(skill, skill.id + '.rate', 'Rate')
+            yield cls(skill, skill.id + '.max', 'Max')
+
+
 class Database(NamedTuple):
     package: dict[str, Any]
     branch: str
@@ -456,25 +503,15 @@ class Database(NamedTuple):
         package = cls._load_json('package')
         print(f'Loaded data for {package["name"]} {package["version"]}')
 
-        classes_by_id = {
-            d['id']: Class(raw=d, **d) for d in
-            (
-                *cls._load_json('data/classes'),
-                *cls._load_json('data/hall')['data']['classes']
-            )
-        }
-        events = {e['id']: Event(raw=e, **e) for e in cls._load_json('data/events')}
-        tiers = OrderedDict(
-            (t.id, t) for t in sorted(
-                Tier.from_events(events),
-                key=Tier.sort_key,
-            )
-        )
-        tiers_by_tag = {
-            ttag: tier
-            for tier in tiers.values()
-            if (ttag := tier.tag) is not None
-        }
+        classes_by_id = dict(Class.load_by_id(
+            cls._load_json('data/classes'),
+            cls._load_json('data/hall')['data']['classes'],
+        ))
+
+        events = dict(Event.load_by_id(cls._load_json('data/events')))
+
+        tiers = OrderedDict(Tier.load_by_id(events))
+        tiers_by_tag = dict(Tier.load_by_tag(tiers.values()))
 
         skills_by_id, skills_by_level = Skill.group(cls._load_json('data/skills'))
 
