@@ -77,6 +77,28 @@ class Tier:
     def permalink(self) -> str:
         return f'tier_{self.sequence}'
 
+    @staticmethod
+    def group_classes(
+        tiers: dict[str, 'Tier'],
+        classes: Iterable['Class'],
+    ) -> OrderedDict[str, 'Class']:
+
+        classes_by_tier = defaultdict(list)
+        for class_ in classes:
+            tier = class_.get_tier(tiers)
+            classes_by_tier[tier.id].append(class_)
+        for group in classes_by_tier.values():
+            group.sort(key=Class.sort_key)
+
+        def sort_key(pair):
+            tier_id, class_ = pair
+            return tiers[tier_id].sequence
+
+        return OrderedDict(sorted(
+            classes_by_tier.items(),
+            key=sort_key,
+        ))
+
 
 class MutatedNode:
     def __init__(self, node: ast.Node) -> None:
@@ -311,6 +333,17 @@ class Class(HasRaw, HasRequirements):
     def permalink(self) -> str:
         return f'class_{self.id}'
 
+    @staticmethod
+    def load_reverse_deps(classes: dict[str, 'Class']) -> dict[str, list['Class']]:
+        requirements = defaultdict(list)
+        for dependent_class in classes.values():
+            for required_name in dependent_class.positive_requirements:
+                depended_class = classes.get(required_name)
+                if depended_class is not None:
+                    requirements[required_name].append(dependent_class)
+
+        return requirements
+
 
 @dataclass(frozen=True)
 class Event(HasRaw, HasRequirements):
@@ -365,6 +398,28 @@ class Skill(HasRaw, HasRequirements):
 
     def sort_key(self) -> str:
         return self.friendly_name
+
+    @staticmethod
+    def group(
+        skills: Collection[dict[str, Any]],
+    ) -> tuple[
+         dict[str, 'Skill'],
+         dict[int, list['Skill']],
+     ]:
+        by_id = {
+            s['id']: Skill(raw=s, **s)
+            for s in skills
+        }
+
+        by_level = defaultdict(list)
+        for skill in by_id.values():
+            by_level[skill.level or 0].append(skill)
+
+        for level_skills in by_level.values():
+            level_skills.sort(key=Skill.sort_key)
+
+        ordered_by_level = OrderedDict(sorted(by_level.items()))
+        return by_id, ordered_by_level
 
 
 class Database(NamedTuple):
@@ -421,7 +476,7 @@ class Database(NamedTuple):
             if (ttag := tier.tag) is not None
         }
 
-        skills_by_id, skills_by_level = cls._group_skills(cls._load_json('data/skills'))
+        skills_by_id, skills_by_level = Skill.group(cls._load_json('data/skills'))
 
         index = (
             tiers
@@ -435,67 +490,12 @@ class Database(NamedTuple):
             branch=cls._get_branch(),
             tiers_by_id=tiers,
             classes_by_id=classes_by_id,
-            classes_by_tier=cls._group_classes(tiers, classes_by_id.values()),
+            classes_by_tier=Tier.group_classes(tiers, classes_by_id.values()),
             classes_by_name=sorted(classes_by_id.values(), key=Class.sort_key),
-            class_deps=cls._load_class_reverse_deps(classes_by_id),
+            class_deps=Class.load_reverse_deps(classes_by_id),
             skills_by_level=skills_by_level,
             index=index,
         )
-
-    @staticmethod
-    def _group_classes(
-        tiers: dict[str, Tier],
-        classes: Iterable[Class],
-    ) -> OrderedDict[str, Class]:
-
-        classes_by_tier = defaultdict(list)
-        for class_ in classes:
-            tier = class_.get_tier(tiers)
-            classes_by_tier[tier.id].append(class_)
-        for group in classes_by_tier.values():
-            group.sort(key=Class.sort_key)
-
-        def sort_key(pair):
-            tier_id, class_ = pair
-            return tiers[tier_id].sequence
-
-        return OrderedDict(sorted(
-            classes_by_tier.items(),
-            key=sort_key,
-        ))
-
-    @staticmethod
-    def _load_class_reverse_deps(classes: dict[str, Class]) -> dict[str, list[Class]]:
-        requirements = defaultdict(list)
-        for dependent_class in classes.values():
-            for required_name in dependent_class.positive_requirements:
-                depended_class = classes.get(required_name)
-                if depended_class is not None:
-                    requirements[required_name].append(dependent_class)
-
-        return requirements
-
-    @staticmethod
-    def _group_skills(
-        skills: Collection[dict[str, Any]],
-    ) -> tuple[
-         dict[str, Skill],
-         dict[int, list[Skill]],
-     ]:
-        by_id = {
-            s['id']: Skill(raw=s, **s)
-            for s in skills
-        }
-
-        by_level = defaultdict(list)
-        for skill in by_id.values():
-            by_level[skill.level or 0].append(skill)
-
-        for level_skills in by_level.values():
-            level_skills.sort(key=Skill.sort_key)
-
-        ordered_by_level = OrderedDict(sorted(by_level.items()))
-        return by_id, ordered_by_level
 
     @staticmethod
     def _get_branch() -> str:
