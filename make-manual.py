@@ -41,6 +41,8 @@ class Tier:
         elif event.id == 'evt_helper':
             sequence = -2
             name = 'Job Tier'
+        else:
+            raise ValueError(f'Event {event.id} not supported')
         return cls(sequence, event.id, name, event)
 
     @classmethod
@@ -106,7 +108,7 @@ class Tier:
             group.sort(key=Class.sort_key)
 
         def sort_key(pair):
-            tier_id, class_ = pair
+            tier_id, _ = pair
             return tiers[tier_id].sequence
 
         return OrderedDict(sorted(
@@ -463,10 +465,11 @@ class SkillRef:
         return f'{self.skill.friendly_name} ({self.suffix})'
 
     @classmethod
-    def from_skills(cls, skills: Iterable[Skill]) -> Iterator['SkillRef']:
+    def from_skills(cls, skills: Iterable[Skill]) -> Iterator[tuple[str, 'SkillRef']]:
         for skill in skills:
-            yield cls(skill, skill.id + '.rate', 'Rate')
-            yield cls(skill, skill.id + '.max', 'Max')
+            for suffix in ('rate', 'max'):
+                ref = cls(skill, f'{skill.id}.{suffix}', suffix)
+                yield ref.id, ref
 
 
 class Database(NamedTuple):
@@ -514,12 +517,14 @@ class Database(NamedTuple):
         tiers_by_tag = dict(Tier.load_by_tag(tiers.values()))
 
         skills_by_id, skills_by_level = Skill.group(cls._load_json('data/skills'))
+        skill_refs = dict(SkillRef.from_skills(skills_by_id.values()))
 
         index = (
             tiers
             | tiers_by_tag
             | classes_by_id
             | skills_by_id
+            | skill_refs
         )
 
         return cls(
