@@ -166,6 +166,7 @@
       {% endif %}
       {% endif %}
 
+      {{- macros.reverse_deps(tier, tier_deps) }}
       <h4>Classes</h4>
       <nav class="toc-columns">
         {% for class_ in classes %}
@@ -207,17 +208,8 @@
         {% endif %}
         {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
         {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
-        {%- if class_.id in class_deps %}
-        <p>
-          Unlocks:
-          {% for dep in class_deps[class_.id] %}
-          <a href="#{{dep.permalink}}">{{dep.friendly_name}}</a>
-          {%- if loop.last %}.{% else %}, {% endif %}
-
-          {% endfor %}
-        </p>
-        {% endif %}
-        {% if class_.flavor %}
+        {{- macros.reverse_deps(class_, class_deps) }}
+        {%- if class_.flavor %}
         <p><em>{{class_.flavor}}</em></p>
         {% endif %}
         {% if class_.cost or class_.modifier_map or class_.result %}
@@ -259,10 +251,16 @@
         <p>{{skill.desc}}</p>
         {% endif %}
         {% if skill.school %}
-        <p>School: {{skill.school}}.</p>
+        <p>School: {% if isinstance(skill.school, str) -%}
+          {{skill.school}}
+          {%- else -%}
+          {{skill.school|join(", ")}}
+          {%- endif -%}
+        .</p>
         {% endif %}
         {{- macros.require_fragments(skill.need,    skill.friendly_need,    'Needs') }}
         {{- macros.require_fragments(skill.require, skill.friendly_require, 'Requires') }}
+        {{- macros.reverse_deps(skill, skill_deps) }}
         {%- if skill.flavor %}
         <p><em>{{skill.flavor}}</em></p>
         {% endif %}
@@ -271,7 +269,7 @@
         <div class="stats">
           {{- macros.stats_table(skill.buy, 'Cost') }}
           {{- macros.stats_table(skill.run, 'Run') }}
-          {{- macros.stats_table(skill.mod, 'Modifiers') }}
+          {{- macros.stats_table(skill.modifier_map, 'Modifiers') }}
           {{- macros.stats_table(skill.effect, 'Effect') }}
           {{- macros.stats_table(skill.result, 'Result') }}
         </div>

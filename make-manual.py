@@ -257,6 +257,7 @@ class MutatedNode:
 class HasRequirements:
     require: Optional[str] = None
     need: Optional[str] = None
+    friendly_name: str
 
     @property
     def positive_requirements(self) -> Iterator[str]:
@@ -273,7 +274,11 @@ class HasRequirements:
     def describe_requirements(source: Union[str, Iterable[str]], index: dict[str, Any]) -> Iterable[str]:
         if isinstance(source, str):
             source = (source,)
+        first = True
         for line in source:
+            if not first:
+                yield ', '
+            first = False
             tree = parser.parse(line)
             mutated = MutatedNode(tree).transform()
             yield from mutated.describe(index)
@@ -284,13 +289,16 @@ class HasRequirements:
     def friendly_need(self, index: dict[str, Any]) -> Iterable[str]:
         return self.describe_requirements(self.need, index)
 
-    @staticmethod
-    def load_reverse_deps(index: dict[str, 'HasRequirements']) -> dict[str, list['HasRequirements']]:
+    @classmethod
+    def load_reverse_deps(cls, index: dict[str, 'HasRequirements']) -> dict[str, list['HasRequirements']]:
         requirements = defaultdict(list)
         for dependent_obj in index.values():
             reqs = getattr(dependent_obj, 'positive_requirements', ())
             for required_name in reqs:
                 requirements[required_name].append(dependent_obj)
+
+        for group in requirements.values():
+            group.sort(key=cls.sort_key)
 
         return requirements
 
@@ -299,7 +307,7 @@ class HasRequirements:
         type_: Type,
         index: dict[str, Any],
         deps: dict[str, list['HasRequirements']],
-    ) -> Iterator[tuple[str, 'HasRequirements']]:
+    ) -> Iterator[tuple[str, list['HasRequirements']]]:
         for name, dep_group in deps.items():
             required_obj = index.get(name)
             if isinstance(required_obj, type_):
@@ -310,8 +318,11 @@ class HasRequirements:
         cls,
         index: dict[str, Any],
         deps: dict[str, list['HasRequirements']],
-    ) -> Iterator[tuple[str, 'HasRequirements']]:
+    ) -> Iterator[tuple[str, list['HasRequirements']]]:
         return cls.reverse_deps_for_type(cls, index, deps)
+
+    def sort_key(self) -> tuple[str, str]:
+        return type(self).__name__, self.friendly_name
 
 
 class HasRaw:
@@ -387,9 +398,6 @@ class Class(HasRaw, HasRequirements):
             return self.disable,
         return tuple(self.disable)
 
-    def sort_key(self) -> str:
-        return self.friendly_name
-
     @property
     def permalink(self) -> str:
         return f'class_{self.id}'
@@ -433,7 +441,7 @@ class Skill(HasRaw, HasRequirements):
     raw: dict
     id: str
     run: dict[str, float]
-    mod: dict[str, float]
+    mod: dict[str, Union[float, dict[str, float]]]
     need: Optional[Union[str, list[str]]] = None
     desc: Optional[str] = None
     buy: Optional[dict[str, float]] = None
@@ -463,8 +471,16 @@ class Skill(HasRaw, HasRequirements):
     def permalink(self) -> str:
         return 'skill_' + self.id
 
-    def sort_key(self) -> str:
-        return self.friendly_name
+    @property
+    def modifier_map(self) -> dict[str, float]:
+        map = {}
+        for k_outer, v_outer in self.mod.items():
+            if isinstance(v_outer, dict):
+                for k_inner, v_inner in v_outer.items():
+                    map[f'{k_outer}.{k_inner}'] = v_inner
+            else:
+                map[k_outer] = v_outer
+        return map
 
     @staticmethod
     def group(
@@ -615,7 +631,7 @@ def render(db: Database) -> None:
     )
     template = env.get_template('template.html')
     content = template.render(
-        isinstance=isinstance, hasattr=hasattr, len=len, list=list,
+        isinstance=isinstance, hasattr=hasattr, len=len, list=list, str=str,
         level_name=level_name,
         Tier=Tier, Class=Class,
         **db._asdict(),
