@@ -238,6 +238,7 @@
   <section id="skills">
     <h2>Ⅳ. Skills</h2>
     {% for level, skills in skills_by_level.items() %}
+
     <section id="level_{{level}}_skills">
       <h3>{{level_name(level)}} Skills</h3>
       {% for skill in skills %}
