@@ -245,11 +245,11 @@
 
       <section id="{{skill.permalink}}">
         <h4>{{skill.friendly_name}}</h4>
-        {% if skill.verb %}
-        <p>Verb: {{skill.verb}}&hellip;</p>
-        {% endif %}
         {% if skill.desc %}
         <p>{{skill.desc}}</p>
+        {% endif %}
+        {% if skill.verb %}
+        <p>Verb: {{skill.verb}}&hellip;</p>
         {% endif %}
         {% if skill.school %}
         <p>School: {% if isinstance(skill.school, str) -%}
