@@ -27,6 +27,12 @@ class Tier:
     friendly_name: str
     event: Optional['Event']
 
+    def __str__(self) -> str:
+        return self.friendly_name
+
+    def __repr__(self) -> str:
+        return self.friendly_name
+
     @property
     def title(self) -> str:
         if self.event and self.event.name:
@@ -51,8 +57,8 @@ class Tier:
         name = f'Tier {sequence}'
         return cls(sequence, event.id, name, event)
 
-    def sort_key(self) -> int:
-        return self.sequence
+    def sort_key(self) -> tuple[str, int]:
+        return type(self).__name__, self.sequence
 
     @classmethod
     def from_events(cls, events: dict[str, 'Event']) -> Iterator['Tier']:
@@ -121,6 +127,14 @@ class Tier:
         if self.event:
             return self.event.positive_requirements
         return ()
+
+    @property
+    def mod(self) -> Optional[dict[str, float]]:
+        return self.event and self.event.mod
+
+    @property
+    def result(self) -> Optional[dict[str, float]]:
+        return self.event and self.event.result
 
 
 class MutatedNode:
@@ -543,6 +557,7 @@ class Database(NamedTuple):
     tier_deps: dict[str, list[Tier]]
     class_deps: dict[str, list[Class]]
     skill_deps: dict[str, list[Skill]]
+    modifier_refs: dict[str, list[Any]]
     skills_by_level: dict[int, list[Skill]]
     index: dict[str, Union[Tier, Class]]
 
@@ -576,14 +591,14 @@ class Database(NamedTuple):
 
         events = dict(Event.load_by_id(cls._load_json('data/events')))
 
-        tiers = OrderedDict(Tier.load_by_id(events))
-        tiers_by_tag = dict(Tier.load_by_tag(tiers.values()))
+        tiers_by_id = OrderedDict(Tier.load_by_id(events))
+        tiers_by_tag = dict(Tier.load_by_tag(tiers_by_id.values()))
 
         skills_by_id, skills_by_level = Skill.group(cls._load_json('data/skills'))
         skill_refs = dict(SkillRef.from_skills(skills_by_id.values()))
 
         index = (
-            tiers
+            tiers_by_id
             | tiers_by_tag
             | classes_by_id
             | skills_by_id
@@ -595,15 +610,26 @@ class Database(NamedTuple):
         class_deps = dict(Class.reverse_deps(index, reverse_deps))
         skill_deps = dict(Skill.reverse_deps(index, reverse_deps))
 
+        modifier_refs = load_modifier_refs(
+            (tiers_by_id.values(), 'mod'),
+            (tiers_by_id.values(), 'result'),
+            (classes_by_id.values(), 'modifier_map'),
+            (classes_by_id.values(), 'result'),
+            (skills_by_id.values(), 'modifier_map'),
+            (skills_by_id.values(), 'effect'),
+            (skills_by_id.values(), 'result'),
+        )
+
         return cls(
             package=package,
             branch=cls._get_branch(),
-            tiers_by_id=tiers,
+            tiers_by_id=tiers_by_id,
             classes_by_id=classes_by_id,
-            classes_by_tier=Tier.group_classes(tiers, classes_by_id.values()),
+            classes_by_tier=Tier.group_classes(tiers_by_id, classes_by_id.values()),
             classes_by_name=sorted(classes_by_id.values(), key=Class.sort_key),
-            tier_deps=tier_deps, class_deps=class_deps, skill_deps=skill_deps,
             skills_by_level=skills_by_level,
+            tier_deps=tier_deps, class_deps=class_deps, skill_deps=skill_deps,
+            modifier_refs=modifier_refs,
             index=index,
         )
 
@@ -617,10 +643,38 @@ class Database(NamedTuple):
         return output.rstrip()
 
 
+def sort_key_for(obj: Any, *args: Any, **kwargs: Any) -> Any:
+    return obj.sort_key(*args, **kwargs)
+
+
 def level_name(level: int) -> str:
     if level < 1:
         return 'Base'
     return f'Level {level}'
+
+
+def load_modifier_refs(
+    *sources: tuple[dict[str, Any], str],
+) -> dict[str, list[Any]]:
+    ref_ids = defaultdict(dict)
+
+    for source, attr in sources:
+        for obj in source:
+            mods = getattr(obj, attr)
+            for enhanced_name, enhanced_amount in (mods or {}).items():
+                name = (
+                    enhanced_name
+                    .removesuffix('.max')
+                    .removesuffix('.rate')
+                )
+                ref_ids[name][obj.id] = obj
+
+    refs = {
+        key: sorted(group.values(), key=sort_key_for)
+        for key, group in ref_ids.items()
+    }
+
+    return refs
 
 
 def render(db: Database) -> None:

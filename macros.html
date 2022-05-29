@@ -44,3 +44,17 @@
         </p>
 {% endif %}
 {% endmacro %}
+
+{% macro reverse_modifiers(self) %}
+{% set mods_for_us = modifier_refs.get(self.id) %}
+{% if mods_for_us %}
+        <p>
+          Modified by:
+          {% for mod in mods_for_us %}
+          <a href="#{{mod.permalink}}">{{mod.friendly_name}}</a>
+          {%- if loop.last %}.{% else %}, {% endif %}
+
+          {% endfor %}
+        </p>
+{% endif %}
+{% endmacro %}

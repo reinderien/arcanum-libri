@@ -167,6 +167,10 @@
       {% endif %}
 
       {{- macros.reverse_deps(tier, tier_deps) }}
+      {# Here we would normally invoke reverse_modifiers, but they overlap with
+         the tier's classes and those are more accurately captured including edge
+         cases with the logic below.
+      #}
       <h4>Classes</h4>
       <nav class="toc-columns">
         {% for class_ in classes %}
@@ -209,6 +213,7 @@
         {{- macros.require_fragments(class_.need,    class_.friendly_need,    'Needs') }}
         {{- macros.require_fragments(class_.require, class_.friendly_require, 'Requires') }}
         {{- macros.reverse_deps(class_, class_deps) }}
+        {{- macros.reverse_modifiers(class_) }}
         {%- if class_.flavor %}
         <p><em>{{class_.flavor}}</em></p>
         {% endif %}
@@ -262,6 +267,7 @@
         {{- macros.require_fragments(skill.need,    skill.friendly_need,    'Needs') }}
         {{- macros.require_fragments(skill.require, skill.friendly_require, 'Requires') }}
         {{- macros.reverse_deps(skill, skill_deps) }}
+        {{- macros.reverse_modifiers(skill) }}
         {%- if skill.flavor %}
         <p><em>{{skill.flavor}}</em></p>
         {% endif %}
